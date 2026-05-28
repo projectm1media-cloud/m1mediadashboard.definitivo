@@ -337,7 +337,10 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
   #printArea,#printArea *{visibility:visible!important;}
   #printArea{position:absolute!important;left:0;top:0;width:100%;display:block!important;}
   .bg-orbs{display:none!important;}
-  @page{margin:12mm;}
+  @page{margin:12mm;size:A4;}
+  #printArea>div{page-break-after:avoid;page-break-inside:avoid;}
+  #printArea>div>div{page-break-inside:avoid;}
+  html,body{height:auto!important;overflow:visible!important;}
 }
 #printArea{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
 .alert{cursor:pointer;}
@@ -1172,10 +1175,16 @@ function viewClientDetail(){
   const lastM=months[months.length-1];
   const lastEntries=c.metricLog.filter(l=>l.month===lastM);
 
-  let metricsHtml='';
-  if(lastEntries.length){
-    lastEntries.forEach(entry=>{
-      metricsHtml+=`<div class="scope-head">${ic('folder',13)} ${esc(entry.scope||'General')} · ${ymLabel(entry.month)}</div><div class="cd-grid" style="margin-top:0">`;
+ let metricsHtml='';
+if(lastEntries.length){
+  lastEntries.forEach(entry=>{
+    metricsHtml+=`<div class="scope-head" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>${ic('folder',13)} ${esc(entry.scope||'General')} · ${ymLabel(entry.month)}</span>
+      <span style="display:flex;gap:6px">
+        <span class="iconbtn" onclick="editMetricEntry(${c.id},'${entry.month}','${esc(entry.scope||'General')}')" title="Editar">${svg('edit',14)}</span>
+        <span class="iconbtn danger" onclick="deleteMetricEntry(${c.id},'${entry.month}','${esc(entry.scope||'General')}')" title="Eliminar">${svg('trash',14)}</span>
+      </span>
+    </div><div class="cd-grid" style="margin-top:0">`;
       defs.forEach(m=>{
         const v=entry.values[m.k];
         if(v==null||v==='')return;
@@ -1750,32 +1759,99 @@ async function saveLead(){
 }
 
 /* METRIC MODAL */
-function openMetricModal(){
+function openMetricModal(prefill){
   const c=db.clients.find(x=>x.id===curClient);if(!c)return;
   const defs=METRICS[c.service]||[];
+  const custom=c.customDefs||[];
+  const allDefs=[...defs,...custom];
   const isAds=c.service==='ads'||c.service==='full';
+  const month=prefill?prefill.month:curMonth();
+  const scope=prefill?prefill.scope:'';
   modal(`<div class="modal wide">
-    <h3>${ic('plus',18)}Registrar métricas</h3>
+    <h3>${ic('plus',18)}${prefill?'Editar métricas':'Registrar métricas'}</h3>
     <div class="form-grid">
       <div class="split">
-        <div class="field"><label>Mes</label><input id="mtDate" type="month" value="${curMonth()}"></div>
-        ${isAds?`<div class="field"><label>Campaña / conjunto de anuncios</label><input id="mtScope" placeholder="Ej: Campaña Verano · CBO"></div>`:`<div class="field"><label>Etiqueta</label><input id="mtScope" value="General"></div>`}
+        <div class="field"><label>Mes</label><input id="mtDate" type="month" value="${month}"></div>
+        ${isAds?`<div class="field"><label>Campaña / conjunto</label><input id="mtScope" value="${esc(scope)}" placeholder="Ej: Campaña Verano"></div>`
+          :`<div class="field"><label>Etiqueta</label><input id="mtScope" value="${esc(scope)||'General'}"></div>`}
       </div>
+      <div style="font-family:'Trebuchet MS',sans-serif;font-size:13px;font-weight:700;margin-top:4px;color:var(--c-light)">Métricas predefinidas</div>
       <div class="cd-grid" style="margin-top:0">
-        ${defs.map(m=>`<div class="field"><label>${m.n}${m.u?' ('+m.u+')':''}</label><input type="number" step="any" id="mtf-${m.k}" placeholder="0"></div>`).join('')}
+        ${defs.map(m=>{
+          const val=prefill&&prefill.values[m.k]!=null?prefill.values[m.k]:'';
+          return`<div class="field"><label>${m.n}${m.u?' ('+m.u+')':''}</label><input type="number" step="any" id="mtf-${m.k}" value="${val}" placeholder="0"></div>`;
+        }).join('')}
+      </div>
+      ${custom.length?`<div style="font-family:'Trebuchet MS',sans-serif;font-size:13px;font-weight:700;margin-top:4px;color:var(--green)">Métricas personalizadas</div>
+      <div class="cd-grid" style="margin-top:0">
+        ${custom.map(m=>{
+          const val=prefill&&prefill.values[m.k]!=null?prefill.values[m.k]:'';
+          return`<div class="field" style="position:relative"><label>${m.n}${m.u?' ('+m.u+')':''}</label>
+            <input type="number" step="any" id="mtf-${m.k}" value="${val}" placeholder="0">
+            <span style="position:absolute;top:0;right:0;font-size:10px;color:var(--red);cursor:pointer" onclick="deleteCustomDef('${m.k}')">✕ Eliminar def.</span>
+          </div>`;
+        }).join('')}
+      </div>`:''}
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:14px;">
+        <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:10px">+ Nueva métrica personalizada</div>
+        <div class="split" style="margin-bottom:8px">
+          <div class="field"><label>Nombre</label><input id="newMetricName" placeholder="Ej: Seguidores totales"></div>
+          <div class="field"><label>Unidad</label><input id="newMetricUnit" placeholder="Ej: %, €, x"></div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="addCustomDef()">${ic('plus',13)}Añadir esta métrica</button>
       </div>
     </div>
-    <p class="mini" style="margin-top:10px">${ic('info',13)} ${isAds?'Puedes registrar una entrada por cada campaña o conjunto de anuncios.':'Deja en blanco las métricas que no apliquen.'}</p>
-    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModalNow()">Cancelar</button><button class="btn btn-primary" onclick="saveMetrics()">Guardar</button></div>
+    <p class="mini" style="margin-top:10px">${ic('info',13)} Las métricas personalizadas se guardan para este cliente.</p>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModalNow()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveMetrics()">${prefill?'Guardar cambios':'Guardar'}</button>
+    </div>
   </div>`);
+}
+
+  async function deleteMetricEntry(clientId, month, scope){
+  const c=db.clients.find(x=>x.id===clientId);if(!c)return;
+  if(!confirm('¿Eliminar este registro de métricas ('+scope+' · '+ymLabel(month)+')?'))return;
+  c.metricLog=c.metricLog.filter(l=>!(l.month===month&&(l.scope||'General')===(scope||'General')));
+  await persistDB();render();
+}
+function editMetricEntry(clientId, month, scope){
+  curClient=clientId;
+  const c=db.clients.find(x=>x.id===clientId);if(!c)return;
+  const entry=c.metricLog.find(l=>l.month===month&&(l.scope||'General')===(scope||'General'));
+  if(!entry)return;
+  openMetricModal({month,scope,values:entry.values});
+}
+function addCustomDef(){
+  const c=db.clients.find(x=>x.id===curClient);if(!c)return;
+  const name=($('newMetricName').value||'').trim();
+  if(!name){alert('Escribe un nombre para la métrica');return;}
+  const unit=($('newMetricUnit').value||'').trim();
+  c.customDefs=c.customDefs||[];
+  const k='custom_'+Date.now();
+  c.customDefs.push({k,n:name,u:unit,hi:true,th:[0,0,0,0],raw:true});
+  persistDB();
+  openMetricModal();
+}
+async function deleteCustomDef(k){
+  const c=db.clients.find(x=>x.id===curClient);if(!c)return;
+  if(!confirm('¿Eliminar esta definición de métrica?'))return;
+  c.customDefs=(c.customDefs||[]).filter(m=>m.k!==k);
+  c.metricLog.forEach(l=>{delete l.values[k];});
+  await persistDB();openMetricModal();
 }
 async function saveMetrics(){
   const c=db.clients.find(x=>x.id===curClient);if(!c)return;
   const defs=METRICS[c.service]||[];
+  const custom=c.customDefs||[];
+  const allDefs=[...defs,...custom];
   const month=$('mtDate').value||curMonth();
   const scope=($('mtScope').value||'General').trim()||'General';
   const values={};let any=false;
-  defs.forEach(m=>{const v=$('mtf-'+m.k).value;if(v!==''){values[m.k]=parseFloat(v);any=true;}});
+  allDefs.forEach(m=>{
+    const el=$('mtf-'+m.k);
+    if(el&&el.value!==''){values[m.k]=parseFloat(el.value);any=true;}
+  });
   if(!any){alert('Rellena al menos una métrica');return;}
   const ex=c.metricLog.find(l=>l.month===month&&(l.scope||'General')===scope);
   if(ex)ex.values=values;
