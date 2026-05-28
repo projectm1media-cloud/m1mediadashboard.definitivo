@@ -678,6 +678,9 @@ function showApp(){
   }
   if(!window._timersSet){window._timersSet=true;setInterval(tickDate,30000);setInterval(purgeOldDone,30000);}
   try{render();}catch(e){console.error('render:',e);}
+  initNotifications();
+  setTimeout(checkAutomatedNotifications,5000);
+  setInterval(checkAutomatedNotifications,3600000);
 }
 async function loadAndShow(){
   $('authScreen').classList.add('hide');
@@ -695,6 +698,7 @@ function migrate(){
   db.clients=db.clients||[];db.incomes=db.incomes||[];db.costs=db.costs||[];
   db.tasks=db.tasks||[];db.leads=db.leads||[];db.prodLog=db.prodLog||[];
   db.dismissedAlerts=db.dismissedAlerts||{};
+  db.notifiedKeys=db.notifiedKeys||{};
   if(!db.prodToday)db.prodToday={date:dayKey(),points:0,count:0};
   db.clients.forEach(c=>{c.accesses=c.accesses||[];c.meetings=c.meetings||[];c.metricLog=c.metricLog||[];c.contact=c.contact||{};});
 }
@@ -1564,13 +1568,87 @@ function segBind(id,cb,attr){
 }
 
 /* ============ ACTIONS: LEADS ============ */
-async function moveLead(id,stage){const l=db.leads.find(x=>x.id===id);if(l&&l.stage!==stage){l.stage=stage;await persistDB();render();}}
+async function moveLead(id,stage){
+  const l=db.leads.find(x=>x.id===id);
+  if(l&&l.stage!==stage){
+    l.stage=stage;
+    await persistDB();
+    if(stage==='Propuesta')
+      sendNotif('📄 Lead en Propuesta',l.name+' — prepara y envía la propuesta ahora.');
+    if(stage==='Reunión'&&l.meetingDate)
+      scheduleLocalNotifications();
+    render();
+  }
+}
+  async function moveLead(id,stage){
+  const l=db.leads.find(x=>x.id===id);
+  if(l&&l.stage!==stage){
+    l.stage=stage;
+    await persistDB();
+    if(stage==='Propuesta')
+      sendNotif('📄 Lead en Propuesta',l.name+' — prepara y envía la propuesta ahora.');
+    if(stage==='Reunión'&&l.meetingDate)
+      scheduleLocalNotifications();
+    render();
+  }
+}
+
+function checkAutomatedNotifications(){
+  if(!db||Notification.permission!=='granted')return;
+  const now=Date.now();
+  if(!db.notifiedKeys)db.notifiedKeys={};
+
+  function once(key,fn){
+    const last=db.notifiedKeys[key];
+    if(!last||now-last>86400000){
+      db.notifiedKeys[key]=now;
+      fn();
+      persistDB();
+    }
+  }
+
+  // Tareas sin completar 3+ días
+  db.tasks.filter(t=>!t.done&&!t.isAlert&&t.createdAt&&now-t.createdAt>3*86400000)
+    .forEach(t=>{
+      once('task3d-'+t.id,()=>
+        sendNotif('📌 Tarea sin completar · 3 días',t.text));
+    });
+
+  // Health score bajo 60
+  db.clients.filter(c=>c.status!=='archived').forEach(c=>{
+    const h=clientHealth(c);
+    if(h!=null&&h<60){
+      once('health60-'+c.id,()=>
+        sendNotif('⚠️ Health score bajo · '+c.name,'Score '+h+'/100 — requiere atención.'));
+    }
+  });
+
+  // Facturas pendientes 4+ días
+  db.incomes.filter(i=>i.status==='pending').forEach(i=>{
+    const days=Math.floor((now-new Date(i.date+'-15'))/86400000);
+    if(days>=4){
+      once('inv4d-'+i.id,()=>
+        sendNotif('💸 Factura pendiente +4 días',cliName(i.clientId)+' · '+eur(i.amount)));
+    }
+  });
+
+  // Tareas que vencen en 24h
+  db.tasks.filter(t=>!t.done&&!t.isAlert&&t.due).forEach(t=>{
+    const diff=new Date(t.due+'T09:00:00')-new Date();
+    if(diff>0&&diff<86400000){
+      once('due24h-'+t.id,()=>{
+        const delay=Math.max(diff-3600000,5000);
+        setTimeout(()=>sendNotif('⏰ Tarea vence en 24h',t.text),delay);
+      });
+    }
+  });
+}
 async function delLead(id){if(!confirm('¿Eliminar este lead definitivamente?'))return;db.leads=db.leads.filter(x=>x.id!==id);await persistDB();render();}
 
 /* ============ ACTIONS: TASKS ============ */
 async function addTask(){
   const v=$('tkInput').value.trim();if(!v)return;
-  db.tasks.unshift({id:uid(),text:v,prio:$('tkPrio').value,cli:+$('tkCli').value,done:false,doneAt:0,due:$('tkDue').value||''});
+  db.tasks.unshift({id:uid(),text:v,prio:$('tkPrio').value,cli:+$('tkCli').value,done:false,doneAt:0,due:$('tkDue').value||'',createdAt:Date.now()});
   await persistDB();render();
 }
 async function toggleTask(id){
