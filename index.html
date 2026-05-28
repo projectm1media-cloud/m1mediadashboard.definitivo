@@ -12,6 +12,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>M1 Media · Centro de Control</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "d53669c3-db56-4856-ab12-6697f6f2d8ce",
+      safari_web_id: "web.onesignal.auto.511f3fe8-4f38-4cfd-9441-4579acc1dc24",
+      notifyButton: {
+        enable: true,
+      },
+    });
+  });
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 .fsyne{font-family:'Trebuchet MS','Segoe UI',system-ui,sans-serif;}
