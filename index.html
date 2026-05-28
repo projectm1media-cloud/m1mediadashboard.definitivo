@@ -1765,7 +1765,7 @@ function openLeadModal(id){
 async function saveLead(){
   const name=$('ldName').value.trim();if(!name){alert('Indica el nombre del lead');return;}
   const data={name,channel:$('ldChannel').value,stage:$('ldStage').value,niche:$('ldNiche').value,
-   value:parseFloat($('ldValue').value)||0,phone:$('ldPhone').value.trim(),notes:$('ldNotes').value.trim(),meetingDate:$('ldMeetingDate').value||''
+    value:parseFloat($('ldValue').value)||0,phone:$('ldPhone').value.trim(),notes:$('ldNotes').value.trim(),meetingDate:$('ldMeetingDate').value||''};
   if(editLeadId)Object.assign(db.leads.find(x=>x.id===editLeadId),data);
   else db.leads.push(Object.assign({id:uid(),date:curMonth()},data));
   await persistDB();closeModalNow();render();
