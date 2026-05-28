@@ -351,6 +351,15 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 .rep-step{display:flex;gap:9px;font-size:13px;color:var(--txt);margin-bottom:7px;}
 .rep-step .rn{width:20px;height:20px;border-radius:50%;background:var(--c-deep);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-head{text-align:center;font-size:10.5px;font-weight:700;color:var(--txt-3);padding:6px 0;text-transform:uppercase;}
+.cal-day{min-height:52px;border-radius:var(--r-sm);padding:6px;cursor:pointer;transition:background .12s;}
+.cal-day:hover{background:var(--bg-2);}
+.cal-today{background:rgba(116,170,255,.15);border:1px solid var(--c-light);}
+.cal-today .cal-num{color:var(--c-light);font-weight:800;}
+.cal-num{font-size:12.5px;color:var(--txt-2);}
+.cal-dots{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;}
+.cal-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 
 </style>
 </head>
@@ -577,6 +586,7 @@ const NICHES=[
 ];
 
 let db=null, finPeriod='6m', evoPeriod='6m', prodPeriod='2w', taskFilter='all', curClient=null, curTab='dashboard';
+let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 let budgetState={clientId:0,niche:'local',margin:35,services:{}};
 
 /* ============ STORAGE (Supabase) ============ */
@@ -882,6 +892,7 @@ const NAV=[
   {t:'presupuestos',n:'Presupuestos',i:'calc',sub:'Calcula precios y genera propuestas'},
   {t:'finanzas',n:'Finanzas',i:'coin',sub:'Ingresos, costes y rentabilidad'},
   {t:'evolucion',n:'Evolución',i:'chart',sub:'Tendencias por periodo'},
+  {t:'calendario',n:'Calendario',i:'calendar',sub:'Reuniones y seguimientos'},
   {t:'tareas',n:'Tareas',i:'check',sub:'Organización y alertas'},
   {t:'productividad',n:'Productividad',i:'flame',sub:'Rendimiento diario'}
 ];
@@ -1511,6 +1522,7 @@ function viewProductividad(){
 
 /* ============ BIND (post-render listeners) ============ */
 const BIND={
+  calendario(){},
   dashboard(){const months=lastMonths(6);const data=months.map(m=>({label:ymLabel(m),ing:monthRevenue(m),prof:monthRevenue(m)-monthCost(m)}));if($('dashChart'))$('dashChart').innerHTML=lineChart(data,{series:[{key:'ing',color:'#74AAFF',label:'Ingresos'},{key:'prof',color:'#3ECF8E',label:'Beneficio'}],h:230});},
   crm(){
     document.querySelectorAll('.lead-card').forEach(card=>{
@@ -1743,6 +1755,7 @@ function openLeadModal(id){
         <div class="field"><label>Sector / nicho</label><select id="ldNiche">${NICHES.map(n=>`<option value="${n.k}" ${l&&l.niche===n.k?'selected':''}>${n.n}</option>`).join('')}</select></div>
         <div class="field"><label>Valor estimado (€)</label><input id="ldValue" type="number" value="${l?l.value||'':''}" placeholder="0"></div>
       </div>
+      <div class="field"><label>Fecha de reunión</label><input id="ldMeetingDate" type="date" value="${l&&l.meetingDate?l.meetingDate:''}"></div>
       <div class="field"><label>Teléfono WhatsApp (con prefijo)</label><input id="ldPhone" value="${l?esc(l.phone||''):''}" placeholder="+34600..."></div>
       <div class="field"><label>Notas</label><textarea id="ldNotes" rows="2" placeholder="Detalles...">${l?esc(l.notes||''):''}</textarea></div>
     </div>
@@ -1752,7 +1765,7 @@ function openLeadModal(id){
 async function saveLead(){
   const name=$('ldName').value.trim();if(!name){alert('Indica el nombre del lead');return;}
   const data={name,channel:$('ldChannel').value,stage:$('ldStage').value,niche:$('ldNiche').value,
-    value:parseFloat($('ldValue').value)||0,phone:$('ldPhone').value.trim(),notes:$('ldNotes').value.trim()};
+    value:parseFloat($('ldValue').value)||0,phone:$('ldPhone').value.trim(),notes:$('ldNotes').value.trim(),meetingDate:$('ldMeetingDate').value||'';
   if(editLeadId)Object.assign(db.leads.find(x=>x.id===editLeadId),data);
   else db.leads.push(Object.assign({id:uid(),date:curMonth()},data));
   await persistDB();closeModalNow();render();
@@ -2168,7 +2181,93 @@ function genProposalFromBudget(){
   if(c)d.phone=c.contact.phone||'';
   openProposalDoc(d);
 }
-
+/* ============ CALENDARIO ============ */
+function gatherAllEvents(){
+  const events=[];
+  db.clients.forEach(c=>{
+    (c.meetings||[]).forEach(m=>{
+      events.push({date:m.date,title:'Reunión · '+c.name,sub:m.notes||'',color:c.color,type:'client',id:m.id});
+    });
+  });
+  db.leads.filter(l=>l.stage==='Reunión'&&l.meetingDate).forEach(l=>{
+    events.push({date:l.meetingDate,title:'Demo · '+l.name,sub:l.notes||'',color:STAGE_COL['Reunión'],type:'lead',id:l.id});
+  });
+  return events.sort((a,b)=>a.date<b.date?-1:1);
+}
+function calNav(dir){
+  calMonth+=dir;
+  if(calMonth<0){calMonth=11;calYear--;}
+  if(calMonth>11){calMonth=0;calYear++;}
+  render();
+}
+function calDayClick(date){
+  const evs=gatherAllEvents().filter(e=>e.date===date);
+  if(!evs.length)return;
+  modal(`<div class="modal">
+    <h3>${ic('calendar',18)}${new Date(date+'T12:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</h3>
+    <div class="tlist" style="margin-top:0">
+      ${evs.map(e=>`<div class="titem">
+        <div class="prio" style="background:${e.color};min-height:34px"></div>
+        <div class="tbody"><div class="ttext">${esc(e.title)}</div>${e.sub?`<div class="tsub">${esc(e.sub)}</div>`:''}</div>
+        <span class="pill pill-cli">${e.type==='lead'?'Lead':'Cliente'}</span>
+      </div>`).join('')}
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModalNow()">Cerrar</button></div>
+  </div>`);
+}
+function viewCalendario(){
+  const events=gatherAllEvents();
+  const today=dayKey();
+  const y=calYear,m=calMonth;
+  const firstDay=(new Date(y,m,1).getDay()+6)%7;
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const monthName=new Date(y,m,1).toLocaleDateString('es-ES',{month:'long',year:'numeric'});
+  const byDate={};
+  events.forEach(e=>{if(!byDate[e.date])byDate[e.date]=[];byDate[e.date].push(e);});
+  const upcoming=events.filter(e=>e.date>=today).slice(0,10);
+  let cells='';
+  for(let i=0;i<firstDay;i++)cells+='<div></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isToday=ds===today;
+    const evs=byDate[ds]||[];
+    cells+=`<div class="cal-day${isToday?' cal-today':''}${evs.length?' cal-has-ev':''}" onclick="calDayClick('${ds}')">
+      <div class="cal-num">${d}</div>
+      <div class="cal-dots">${evs.slice(0,4).map(e=>`<span class="cal-dot" style="background:${e.color}"></span>`).join('')}</div>
+    </div>`;
+  }
+  return`
+    <div class="row-head" style="margin-top:10px">
+      <h2>Calendario de reuniones</h2>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="btn btn-ghost btn-sm" onclick="calNav(-1)">${svg('back',14)}</button>
+        <span style="font-size:13px;font-weight:600;text-transform:capitalize;min-width:150px;text-align:center">${monthName}</span>
+        <button class="btn btn-ghost btn-sm" style="transform:scaleX(-1)" onclick="calNav(1)">${svg('back',14)}</button>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:14px">
+      <div class="cal-grid">
+        ${['L','M','X','J','V','S','D'].map(d=>`<div class="cal-head">${d}</div>`).join('')}
+        ${cells}
+      </div>
+    </div>
+    <div class="row-head"><h2>Próximas reuniones</h2><span class="meta">${upcoming.length} eventos</span></div>
+    <div class="tlist">
+      ${upcoming.length?upcoming.map(e=>`
+        <div class="titem">
+          <div class="prio" style="background:${e.color};min-height:34px"></div>
+          <div class="tbody">
+            <div class="ttext">${esc(e.title)}</div>
+            <div class="tsub">
+              <span>${new Date(e.date+'T12:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</span>
+              ${e.sub?`<span>${esc(e.sub)}</span>`:''}
+            </div>
+          </div>
+          <span class="pill pill-cli">${e.type==='lead'?'Lead':'Cliente'}</span>
+        </div>`).join('')
+      :'<div class="empty">'+ic('calendar',30)+'<div>Sin reuniones próximas</div></div>'}
+    </div>`;
+}
 /* ============ INIT ============ */
 (async()=>{
   tickDate();
