@@ -916,7 +916,7 @@ function render(){
   buildNav();
   const meta=NAV.find(x=>x.t===curTab);
   $('ptitle').textContent=meta.n;$('psub').textContent=meta.sub;
-  const fns={dashboard:viewDashboard,crm:viewCRM,clientes:viewClientes,presupuestos:viewPresupuestos,finanzas:viewFinanzas,evolucion:viewEvolucion,tareas:viewTareas,productividad:viewProductividad};
+  const fns={dashboard:viewDashboard,crm:viewCRM,clientes:viewClientes,presupuestos:viewPresupuestos,finanzas:viewFinanzas,evolucion:viewEvolucion,calendario:viewCalendario,tareas:viewTareas,productividad:viewProductividad};
   try{$('scrollArea').innerHTML=fns[curTab]();}catch(e){console.error(e);$('scrollArea').innerHTML='<div class="empty">Error al renderizar. Recarga el artefacto.</div>';}
   try{(BIND[curTab]||function(){})();}catch(e){console.error(e);}
   updateBadge();
