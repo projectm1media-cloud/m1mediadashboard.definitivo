@@ -703,6 +703,9 @@ document.addEventListener('keydown',updateActivity,{passive:true});
   setTimeout(checkAutomatedNotifications,5000);
   setInterval(checkAutomatedNotifications,3600000);
 }
+initNotifications();
+setTimeout(checkAutomatedNotifications,5000);
+setInterval(checkAutomatedNotifications,3600000);
 async function loadAndShow(){
   $('authScreen').classList.add('hide');
   $('loadingScreen').classList.remove('hide');
@@ -1867,7 +1870,10 @@ function openLeadModal(id){
         <div class="field"><label>Sector / nicho</label><select id="ldNiche">${NICHES.map(n=>`<option value="${n.k}" ${l&&l.niche===n.k?'selected':''}>${n.n}</option>`).join('')}</select></div>
         <div class="field"><label>Valor estimado (€)</label><input id="ldValue" type="number" value="${l?l.value||'':''}" placeholder="0"></div>
       </div>
-      <div class="field"><label>Fecha de reunión</label><input id="ldMeetingDate" type="date" value="${l&&l.meetingDate?l.meetingDate:''}"></div>
+      <div class="split">
+  <div class="field"><label>Fecha de reunión</label><input id="ldMeetingDate" type="date" value="${l&&l.meetingDate?l.meetingDate:''}"></div>
+  <div class="field"><label>Hora</label><input id="ldMeetingTime" type="time" value="${l&&l.meetingTime?l.meetingTime:'10:00'}"></div>
+</div>
       <div class="field"><label>Teléfono WhatsApp (con prefijo)</label><input id="ldPhone" value="${l?esc(l.phone||''):''}" placeholder="+34600..."></div>
       <div class="field"><label>Notas</label><textarea id="ldNotes" rows="2" placeholder="Detalles...">${l?esc(l.notes||''):''}</textarea></div>
     </div>
@@ -1877,7 +1883,7 @@ function openLeadModal(id){
 async function saveLead(){
   const name=$('ldName').value.trim();if(!name){alert('Indica el nombre del lead');return;}
   const data={name,channel:$('ldChannel').value,stage:$('ldStage').value,niche:$('ldNiche').value,
-    value:parseFloat($('ldValue').value)||0,phone:$('ldPhone').value.trim(),notes:$('ldNotes').value.trim(),meetingDate:$('ldMeetingDate').value||''};
+    value:parseFloat($('ldValue').value)||0,phone:$('ldPhone').value.trim(),notes:$('ldNotes').value.trim(),meetingDate:$('ldMeetingDate').value||'',meetingTime:$('ldMeetingTime').value||'10:00'};
   if(editLeadId)Object.assign(db.leads.find(x=>x.id===editLeadId),data);
   else db.leads.push(Object.assign({id:uid(),date:curMonth()},data));
   await persistDB();closeModalNow();render();
@@ -2009,7 +2015,10 @@ function openMeetingModal(){
   modal(`<div class="modal">
     <h3>${ic('calendar',18)}Registrar reunión</h3>
     <div class="form-grid">
-      <div class="field"><label>Fecha</label><input id="mgDate" type="date" value="${dayKey()}"></div>
+<div class="split">
+  <div class="field"><label>Fecha</label><input id="mgDate" type="date" value="${dayKey()}"></div>
+  <div class="field"><label>Hora</label><input id="mgTime" type="time" value="10:00"></div>
+</div>
       <div class="field"><label>Notas</label><textarea id="mgNotes" rows="3" placeholder="Temas tratados, acuerdos..."></textarea></div>
     </div>
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModalNow()">Cancelar</button><button class="btn btn-primary" onclick="saveMeeting()">Guardar</button></div>
@@ -2017,7 +2026,7 @@ function openMeetingModal(){
 }
 async function saveMeeting(){
   const c=db.clients.find(x=>x.id===curClient);if(!c)return;
-  c.meetings.push({id:uid(),date:$('mgDate').value||dayKey(),notes:$('mgNotes').value.trim()});
+c.meetings.push({id:uid(),date:$('mgDate').value||dayKey(),time:$('mgTime').value||'10:00',notes:$('mgNotes').value.trim()});
   c.meetings.sort((a,b)=>a.date<b.date?-1:1);
   await persistDB();closeModalNow();render();
 }
@@ -2298,7 +2307,7 @@ function gatherAllEvents(){
   const events=[];
   db.clients.forEach(c=>{
     (c.meetings||[]).forEach(m=>{
-      events.push({date:m.date,title:'Reunión · '+c.name,sub:m.notes||'',color:c.color,type:'client',id:m.id});
+      events.push({date:m.date,time:m.time||'10:00',title:'Reunión · '+c.name,sub:m.notes||'',color:c.color,type:'client',id:m.id});
     });
   });
   db.leads.filter(l=>l.stage==='Reunión'&&l.meetingDate).forEach(l=>{
@@ -2320,7 +2329,7 @@ function calDayClick(date){
     <div class="tlist" style="margin-top:0">
       ${evs.map(e=>`<div class="titem">
         <div class="prio" style="background:${e.color};min-height:34px"></div>
-        <div class="tbody"><div class="ttext">${esc(e.title)}</div>${e.sub?`<div class="tsub">${esc(e.sub)}</div>`:''}</div>
+        <div class="tbody"><div class="ttext">${esc(e.title)}</div>${e.sub?`<div class="tsub">${new Date(e.date+'T12:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})} · ${e.time||'10:00'}</div>
         <span class="pill pill-cli">${e.type==='lead'?'Lead':'Cliente'}</span>
       </div>`).join('')}
     </div>
@@ -2371,7 +2380,7 @@ function viewCalendario(){
           <div class="tbody">
             <div class="ttext">${esc(e.title)}</div>
             <div class="tsub">
-              <span>${new Date(e.date+'T12:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})}</span>
+              <span>${new Date(e.date+'T12:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})} · ${e.time||'10:00'}h</span>
               ${e.sub?`<span>${esc(e.sub)}</span>`:''}
             </div>
           </div>
@@ -2379,6 +2388,128 @@ function viewCalendario(){
         </div>`).join('')
       :'<div class="empty">'+ic('calendar',30)+'<div>Sin reuniones próximas</div></div>'}
     </div>`;
+}
+/* ============ NOTIFICATIONS ============ */
+function sendNotif(title,body){
+  if(!('Notification' in window)||Notification.permission!=='granted')return;
+  try{
+    if(navigator.serviceWorker&&navigator.serviceWorker.controller){
+      navigator.serviceWorker.controller.postMessage({type:'NOTIF',title,body});
+    }else{
+      new Notification(title,{body,icon:'/icons/icon-192.png'});
+    }
+  }catch(e){}
+}
+async function pushNotif(title,body,sendAfterMs){
+  try{
+    const payload={
+      app_id:ONESIGNAL_APP_ID,
+      included_segments:['All'],
+      headings:{en:title,es:title},
+      contents:{en:body,es:body},
+      url:window.location.origin
+    };
+    if(sendAfterMs&&sendAfterMs>0){
+      payload.send_after=new Date(Date.now()+sendAfterMs).toISOString();
+    }
+    const res=await fetch('https://onesignal.com/api/v1/notifications',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Basic '+ONESIGNAL_REST_KEY
+      },
+      body:JSON.stringify(payload)
+    });
+    if(!res.ok)throw new Error('OS error');
+  }catch(e){
+    console.warn('Push falló:',e);
+    sendNotif(title,body);
+  }
+}
+async function initNotifications(){
+  if(!window.OneSignal)return;
+  try{
+    await OneSignal.init({
+      appId:ONESIGNAL_APP_ID,
+      safari_web_id:'web.onesignal.auto.511f3fe8-4f38-4cfd-9441-4579acc1dc24',
+      notifyButton:{enable:false},
+      allowLocalhostAsSecureOrigin:true,
+      serviceWorkerPath:'/sw.js'
+    });
+    const granted=await OneSignal.Notifications.requestPermission();
+    if(granted){
+      scheduleLocalNotifications();
+      setInterval(scheduleLocalNotifications,3600000);
+    }
+  }catch(e){console.warn('OneSignal:',e);}
+}
+function scheduleLocalNotifications(){
+  if(!db)return;
+  const now=new Date(),today=dayKey();
+  try{
+    gatherAllEvents().forEach(e=>{
+      if(!e.date)return;
+      const base=new Date(e.date+'T'+(e.time||'10:00')+':00');
+      const ms24=base-now-86400000;
+      const ms30=base-now-1800000;
+      if(ms24>0&&ms24<86400000*2)
+        pushNotif('📅 Reunión mañana',e.title,ms24);
+      if(ms30>0&&ms30<86400000)
+        pushNotif('⏰ Reunión en 30 min',e.title,ms30);
+    });
+  }catch(e){}
+  try{
+    db.tasks.filter(t=>!t.done&&!t.isAlert&&t.due===today).forEach(t=>{
+      const target=new Date();target.setHours(9,0,0,0);
+      const delay=Math.max(target-now,10000);
+      setTimeout(()=>sendNotif('📌 Tarea vence hoy',t.text),delay);
+    });
+  }catch(e){}
+  try{
+    const crits=computeAlerts().filter(a=>a.crit);
+    if(crits.length)
+      setTimeout(()=>pushNotif('⚠️ Alerta M1 Media',crits[0].text),8000);
+  }catch(e){}
+}
+function checkAutomatedNotifications(){
+  if(!db||Notification.permission!=='granted')return;
+  const now=Date.now();
+  if(!db.notifiedKeys)db.notifiedKeys={};
+  function once(key,fn){
+    const last=db.notifiedKeys[key];
+    if(!last||now-last>86400000){
+      db.notifiedKeys[key]=now;
+      fn();
+      persistDB();
+    }
+  }
+  db.tasks.filter(t=>!t.done&&!t.isAlert&&t.createdAt&&now-t.createdAt>3*86400000)
+    .forEach(t=>{
+      once('task3d-'+t.id,()=>
+        pushNotif('📌 Tarea sin completar · 3 días',t.text));
+    });
+  db.clients.filter(c=>c.status!=='archived').forEach(c=>{
+    const h=clientHealth(c);
+    if(h!=null&&h<60){
+      once('health60-'+c.id,()=>
+        pushNotif('⚠️ Health score bajo · '+c.name,'Score '+h+'/100 — requiere atención.'));
+    }
+  });
+  db.incomes.filter(i=>i.status==='pending').forEach(i=>{
+    const days=Math.floor((now-new Date(i.date+'-15'))/86400000);
+    if(days>=4){
+      once('inv4d-'+i.id,()=>
+        pushNotif('💸 Factura pendiente +4 días',cliName(i.clientId)+' · '+eur(i.amount)));
+    }
+  });
+  db.tasks.filter(t=>!t.done&&!t.isAlert&&t.due).forEach(t=>{
+    const diff=new Date(t.due+'T09:00:00')-new Date();
+    if(diff>0&&diff<86400000){
+      once('due24h-'+t.id,()=>{
+        pushNotif('⏰ Tarea vence en 24h',t.text,Math.max(diff-3600000,5000));
+      });
+    }
+  });
 }
 /* ============ INIT ============ */
 (async()=>{
