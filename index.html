@@ -597,7 +597,15 @@ const NICHES=[
   {k:'b2b',n:'Servicios B2B / consultoría',m:1.35},
   {k:'edu',n:'Formación / infoproductos',m:1.15}
 ];
-
+const INACTIVITY_LIMIT=10*60*60*1000; // 10 horas
+const ACTIVITY_KEY='m1media_last_activity';
+function updateActivity(){localStorage.setItem(ACTIVITY_KEY,Date.now().toString());}
+function isSessionExpired(){
+  const last=parseInt(localStorage.getItem(ACTIVITY_KEY)||'0');
+  if(!last)return false; // primera vez, Supabase gestiona
+  return Date.now()-last>INACTIVITY_LIMIT;
+}
+  
 let db=null, finPeriod='6m', evoPeriod='6m', prodPeriod='2w', taskFilter='all', curClient=null, curTab='dashboard';
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 let budgetState={clientId:0,niche:'local',margin:35,services:{}};
@@ -607,7 +615,13 @@ async function loadDB(){
   try{
     const{data:{user}}=await sb.auth.getUser();
     if(!user){showAuthScreen();return false;}
+    if(isSessionExpired()){
+      await sb.auth.signOut();
+      showAuthScreen();
+      return false;
+    }
     currentUser=user;
+    updateActivity();
     const{data,error}=await sb.from('user_data').select('data').eq('user_id',user.id).single();
     if(error||!data){db=seedDB();await doPersist();}
     else db=data.data;
@@ -650,6 +664,7 @@ async function doAuth(){
     const{data:{user}}=await sb.auth.getUser();
     if(!user)throw new Error('Sin usuario tras autenticar');
     currentUser=user;
+    updateActivity();
     await loadAndShow();
   }catch(e){
     $('authErr').textContent=_authMode==='login'?'Email o contraseña incorrectos.':'Error al registrar. Usa una contraseña de más de 6 caracteres.';
@@ -678,6 +693,10 @@ function showApp(){
   }
   if(!window._timersSet){window._timersSet=true;setInterval(tickDate,30000);setInterval(purgeOldDone,30000);}
   try{render();}catch(e){console.error('render:',e);}
+  updateActivity();
+document.addEventListener('click',updateActivity,{passive:true});
+document.addEventListener('touchstart',updateActivity,{passive:true});
+document.addEventListener('keydown',updateActivity,{passive:true});
   initNotifications();
   setTimeout(checkAutomatedNotifications,5000);
   setInterval(checkAutomatedNotifications,3600000);
