@@ -2329,7 +2329,10 @@ function calDayClick(date){
     <div class="tlist" style="margin-top:0">
       ${evs.map(e=>`<div class="titem">
         <div class="prio" style="background:${e.color};min-height:34px"></div>
-        <div class="tbody"><div class="ttext">${esc(e.title)}</div>${e.sub?`<div class="tsub">${new Date(e.date+'T12:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})} · ${e.time||'10:00'}</div>
+        <div class="tbody">
+          <div class="ttext">${esc(e.title)}</div>
+          <div class="tsub">${new Date(e.date+'T12:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})} · ${e.time||'10:00'}h</div>
+        </div>
         <span class="pill pill-cli">${e.type==='lead'?'Lead':'Cliente'}</span>
       </div>`).join('')}
     </div>
