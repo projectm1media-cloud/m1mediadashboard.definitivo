@@ -1771,8 +1771,7 @@ function viewEvolucion(){
     <div class="panel"><table class="tbl"><thead><tr><th>Mes</th><th>Ingresos</th><th>Costes</th><th>Beneficio</th><th>Margen</th></tr></thead><tbody>
       ${data.slice().reverse().map(d=>{
         const prof=d.prof,m=d.ing?Math.round(prof/d.ing*100):0;
-        return`<tr><td>${d.label}</td><td class="amount-pos">${eur(d.ing)}</td><td class="amount-neg">${eur(d._cost)}</td><td style="color:${prof>=0?'var(--green)':'var(--red)';font-weight:600>">${eur(prof)}</td><td>${m}%</td></tr>`;
-      }).join('')}
+        return `<tr><td>${d.label}</td><td class="amount-pos">${eur(d.ing)}</td><td class="amount-neg">${eur(d._cost)}</td><td style="color:${prof>=0?'var(--green)':'var(--red)'};font-weight:600">${eur(prof)}</td><td>${m}%</td></tr>`;
     </tbody></table></div>`;
 }
 
