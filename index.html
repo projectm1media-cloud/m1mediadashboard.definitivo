@@ -2060,7 +2060,6 @@ async function delWorker(id){
 }
 
 /* ============ CORE HELPERS ============ */
-function $(id){return document.getElementById(id);}
 let pickedColor='#74AAFF';
 function modal(html){const r=$('modalRoot');r.innerHTML=`<div class="modal-overlay" onclick="closeModalNow()">${html}</div>`;r.querySelector('.modal').addEventListener('click',e=>e.stopPropagation());}
 function closeModalNow(){const r=$('modalRoot');r.innerHTML='';}
