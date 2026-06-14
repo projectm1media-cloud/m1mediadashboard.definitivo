@@ -9,10 +9,10 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://ydblbjsstlaiqqallzqf.supabase.co https://cdn.jsdelivr.net https://cdn.onesignal.com https://onesignal.com https://api.onesignal.com https://wa.me https://calendar.google.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.onesignal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ydblbjsstlaiqqallzqf.supabase.co https://onesignal.com https://api.onesignal.com https://cdn.jsdelivr.net wss://ydblbjsstlaiqqallzqf.supabase.co; frame-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://ydblbjsstlaiqqallzqf.supabase.co https://cdn.jsdelivr.net https://cdn.signal.com https://signal.com https://api.signal.com https://wa.me https://calendar.google.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.signal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ydblbjsstlaiqqallzqf.supabase.co https://signal.com https://api.signal.com https://cdn.jsdelivr.net wss://ydblbjsstlaiqqallzqf.supabase.co; frame-src 'n';">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-<meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=()">
+<meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microph=()">
 <title>M1 Media · Centro de Control</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,9 @@
     await OneSignal.init({
       appId: "d53669c3-db56-4856-ab12-6697f6f2d8ce",
       safari_web_id: "web.onesignal.auto.511f3fe8-4f38-4cfd-9441-4579acc1dc24",
-      notifyButton: { enable: true },
+      notifyButton: {
+        enable: true,
+      },
     });
   });
 </script>
@@ -47,18 +49,18 @@ body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:var(--b
 ::-webkit-scrollbar-thumb:hover{background:#46508a;}
 svg{display:block;}
 .ico{display:inline-flex;vertical-align:-.18em;}
-.bg-orbs{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(520px 440px at 10% -5%,rgba(116,170,255,.12),transparent 62%),radial-gradient(500px 440px at 95% 105%,rgba(40,91,176,.16),transparent 62%);}
+.bg-orbs{position:fixed;inset:0;z-index:-1;pointer-events:n;background:radial-gradient(520px 440px at 10% -5%,rgba(116,170,255,.12),transparent 62%),radial-gradient(500px 440px at 95% 105%,rgba(40,91,176,.16),transparent 62%);}
 .loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:100;}
-.loading-screen.hide{display:none;}
+.loading-screen.hide{display:n;}
 .spinner{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--c-light);border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading-screen p{color:var(--txt-2);font-size:13px;}
 .shell{display:grid;grid-template-columns:236px 1fr;min-height:100vh;}
-.shell.hide{display:none;}
+.shell.hide{display:n;}
 .sidebar{background:rgba(22,27,52,.92);backdrop-filter:blur(14px);border-right:1px solid var(--border-soft);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;z-index:20;}
 .logo{padding:24px 22px 18px;border-bottom:1px solid var(--border-soft);}
 .logo-mark{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;}
-.logo-mark .one{font-size:30px;color:var(--c-light);}
+.logo-mark .{font-size:30px;color:var(--c-light);}
 .logo-dot{width:7px;height:7px;border-radius:50%;background:var(--c-light);margin:0 4px 5px;}
 .logo-sub{font-size:10px;color:var(--txt-3);letter-spacing:.16em;text-transform:uppercase;margin-top:5px;}
 nav{padding:12px 11px;flex:1;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
@@ -80,13 +82,13 @@ nav{padding:12px 11px;flex:1;display:flex;flex-direction:column;gap:2px;overflow
 .date-chip .d{font-size:12.5px;font-weight:600;text-transform:capitalize;color:var(--txt);}
 .date-chip .t{font-size:10.5px;color:var(--txt-3);}
 .scroll{flex:1;padding:4px 30px 60px;}
-.tab{display:none;animation:fade .32s ease;}
+.tab{display:n;animation:fade .32s ease;}
 .tab.active{display:block;}
-@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:n;}}
 .row-head{display:flex;align-items:center;justify-content:space-between;margin:24px 0 13px;gap:12px;flex-wrap:wrap;}
 .row-head h2{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;}
 .row-head .meta{font-size:12px;color:var(--txt-3);}
-.btn{display:inline-flex;align-items:center;gap:7px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;border:none;border-radius:var(--r-sm);padding:9px 15px;cursor:pointer;transition:all .15s;}
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;border:n;border-radius:var(--r-sm);padding:9px 15px;cursor:pointer;transition:all .15s;}
 .btn-primary{background:linear-gradient(135deg,var(--c-deep),var(--c-light));color:#fff;box-shadow:0 4px 14px rgba(116,170,255,.3);}
 .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(116,170,255,.42);}
 .btn-ghost{background:var(--card);color:var(--txt-2);border:1px solid var(--border);}
@@ -94,7 +96,7 @@ nav{padding:12px 11px;flex:1;display:flex;flex-direction:column;gap:2px;overflow
 .btn-sm{padding:6px 11px;font-size:12px;}
 .btn-green{background:linear-gradient(135deg,#2c9d6c,#3ECF8E);color:#fff;}
 .btn-red{background:rgba(244,113,116,.15);color:var(--red);border:1px solid rgba(244,113,116,.3);}
-input,select,textarea{font-family:'DM Sans',sans-serif;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--txt);font-size:13px;padding:10px 12px;outline:none;transition:border .15s;width:100%;}
+input,select,textarea{font-family:'DM Sans',sans-serif;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--txt);font-size:13px;padding:10px 12px;outline:n;transition:border .15s;width:100%;}
 input::placeholder,textarea::placeholder{color:var(--txt-3);}
 input:focus,select:focus,textarea:focus{border-color:var(--c-light);}
 select option{background:var(--bg-2);}
@@ -127,7 +129,7 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 .chart-card .ch-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:8px;}
 .chart-card .ch-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;}
 .seg{display:flex;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;gap:2px;flex-wrap:wrap;}
-.seg button{background:transparent;border:none;color:var(--txt-2);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:6px 11px;border-radius:6px;cursor:pointer;transition:all .14s;white-space:nowrap;}
+.seg button{background:transparent;border:n;color:var(--txt-2);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:6px 11px;border-radius:6px;cursor:pointer;transition:all .14s;white-space:nowrap;}
 .seg button.on{background:linear-gradient(135deg,var(--c-deep),var(--c-light));color:#fff;}
 .barRect{transition:opacity .15s;}
 .barRect:hover{opacity:.8;}
@@ -165,7 +167,7 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 .cd-hero .cd-meta{font-size:12.5px;color:var(--txt-2);margin-top:3px;}
 .cd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:15px;margin-top:15px;}
 .info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-soft);font-size:12.5px;gap:10px;}
-.info-row:last-child{border:none;}
+.info-row:last-child{border:n;}
 .info-row .k{color:var(--txt-3);}
 .info-row .v{font-weight:600;text-align:right;}
 .metric-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:13px 14px;}
@@ -213,8 +215,8 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 .tlist{display:flex;flex-direction:column;gap:8px;}
 .titem{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;transition:all .15s;}
 .titem:hover{border-color:#46508a;}
-.titem.done{opacity:.5;}
-.titem.done .ttext{text-decoration:line-through;color:var(--txt-3);}
+.titem.d{opacity:.5;}
+.titem.d .ttext{text-decoration:line-through;color:var(--txt-3);}
 .titem.alert-crit{background:var(--pink-bg);border-color:rgba(245,143,194,.4);}
 .titem.alert-crit .ttext{color:#ffd0e6;}
 .titem.upcoming-task{background:rgba(245,193,71,.06);border-color:rgba(245,193,71,.3);}
@@ -264,7 +266,7 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 .svc-filter-tab.on{background:var(--c-deep);color:#fff;border-color:var(--c-deep);}
 .bud-summary{background:linear-gradient(160deg,var(--card),var(--bg-2));border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;position:sticky;top:14px;}
 .bud-line{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border-soft);font-size:13px;}
-.bud-line.total{border:none;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;padding-top:14px;}
+.bud-line.total{border:n;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;padding-top:14px;}
 .bud-line .bl-v{font-weight:600;}
 .price-range-display{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:10px 0;}
 .prd-item{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px;text-align:center;}
@@ -272,8 +274,8 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 .prd-item .prd-val{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-top:2px;}
 .prd-item.highlight{border-color:var(--c-light);background:rgba(116,170,255,.06);}
 .prd-item.highlight .prd-val{color:var(--c-light);}
-.slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:5px;background:var(--bg-2);outline:none;padding:0;}
-.slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--c-light);cursor:pointer;border:3px solid var(--card);box-shadow:0 2px 6px rgba(0,0,0,.4);}
+.slider{-webkit-appearance:n;appearance:n;width:100%;height:6px;border-radius:5px;background:var(--bg-2);outline:n;padding:0;}
+.slider::-webkit-slider-thumb{-webkit-appearance:n;width:22px;height:22px;border-radius:50%;background:var(--c-light);cursor:pointer;border:3px solid var(--card);box-shadow:0 2px 6px rgba(0,0,0,.4);}
 .slider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--c-light);cursor:pointer;border:3px solid var(--card);}
 .swatches{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
 .swatch{width:29px;height:29px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:transform .12s;}
@@ -282,12 +284,12 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 .hex-wrap{display:flex;align-items:center;gap:8px;margin-top:9px;}
 .hex-wrap input{width:120px;font-family:monospace;}
 .hex-preview{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);flex-shrink:0;}
-.overlay{position:fixed;inset:0;background:rgba(8,10,26,.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:60;padding:18px;}
+.overlay{position:fixed;inset:0;background:rgba(8,10,26,.8);backdrop-filter:blur(4px);display:n;align-items:center;justify-content:center;z-index:60;padding:18px;}
 .overlay.show{display:flex;}
 .modal{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;width:100%;max-width:480px;max-height:90dvh;overflow-y:auto;animation:pop .2s ease;}
 .modal.wide{max-width:640px;}
 .modal.full{max-width:860px;}
-@keyframes pop{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:none;}}
+@keyframes pop{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:n;}}
 .modal h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 .modal-foot{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap;}
 .form-grid{display:grid;gap:13px;}
@@ -339,7 +341,7 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
   body *{visibility:hidden!important;}
   #printArea,#printArea *{visibility:visible!important;}
   #printArea{position:absolute!important;left:0;top:0;width:100%;display:block!important;}
-  .bg-orbs{display:none!important;}
+  .bg-orbs{display:n!important;}
   @page{margin:10mm;size:A4;}
   #printArea>div{page-break-after:avoid;page-break-inside:avoid;}
   #printArea>div>div{page-break-inside:avoid;}
@@ -351,14 +353,14 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 .rep-sec p{font-size:13px;line-height:1.55;color:var(--txt-2);}
 .rep-step{display:flex;gap:9px;font-size:13px;color:var(--txt);margin-bottom:7px;}
 .rep-step .rn{width:20px;height:20px;border-radius:50%;background:var(--c-deep);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.mtoggle{display:none;}
+.mtoggle{display:n;}
 @media(max-width:980px){.bud-grid{grid-template-columns:1fr;}.bud-summary{position:static;}}
 @media(max-width:860px){
   .shell{grid-template-columns:1fr;}
   .sidebar{position:fixed;left:0;top:0;bottom:0;width:262px;max-width:85vw;transform:translateX(-100%);transition:transform .25s;padding-top:env(safe-area-inset-top);}
-  .sidebar.open{transform:none;}
+  .sidebar.open{transform:n;}
   .mtoggle{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:var(--r-sm);background:var(--card);border:1px solid var(--border);color:var(--txt);cursor:pointer;flex-shrink:0;}
-  .mscrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:15;display:none;}
+  .mscrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:15;display:n;}
   .mscrim.show{display:block;}
   .topbar{padding:calc(12px + env(safe-area-inset-top)) 16px 12px;}
   .topbar h1{font-size:19px;}
@@ -384,7 +386,7 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
   .kpi .val{font-size:18px;}
   .cgrid{grid-template-columns:1fr;}
   .cd-grid{grid-template-columns:1fr;}
-  .date-chip .t{display:none;}
+  .date-chip .t{display:n;}
   .seg{width:100%;}
   .seg button{flex:1;text-align:center;}
   .split{grid-template-columns:1fr;}
@@ -397,13 +399,13 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
   .worker-grid{grid-template-columns:1fr;}
 }
 /* Notification toast */
-.toast-container{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:n;}
 .toast{background:var(--card-2);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;font-size:13px;color:var(--txt);box-shadow:0 8px 24px rgba(0,0,0,.4);display:flex;align-items:center;gap:10px;pointer-events:all;animation:slideIn .3s ease;max-width:320px;}
 .toast.success{border-left:3px solid var(--green);}
 .toast.warning{border-left:3px solid var(--amber);}
 .toast.error{border-left:3px solid var(--red);}
 .toast.info{border-left:3px solid var(--c-light);}
-@keyframes slideIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:none;}}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:n;}}
 </style>
 </head>
 <body>
@@ -412,7 +414,7 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 
 <style>
 .auth-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;z-index:200;}
-.auth-screen.hide{display:none;}
+.auth-screen.hide{display:n;}
 .auth-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px 32px;width:100%;max-width:380px;animation:pop .3s ease;}
 .auth-logo{font-size:26px;font-weight:800;color:var(--c-light);letter-spacing:-.04em;margin-bottom:22px;display:flex;align-items:center;gap:4px;font-family:'Syne',sans-serif;}
 .auth-logo span{color:var(--txt);}
@@ -420,7 +422,7 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 .auth-s{font-size:12.5px;color:var(--txt-2);margin-bottom:22px;}
 .auth-err{font-size:12px;color:var(--red);min-height:17px;margin-bottom:9px;}
 .auth-inp{width:100%;margin-bottom:11px;font-size:15px;}
-.auth-btn{width:100%;padding:13px;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,var(--c-deep),var(--c-light));color:#fff;margin-bottom:11px;transition:opacity .15s;font-family:'DM Sans',sans-serif;}
+.auth-btn{width:100%;padding:13px;font-size:14px;font-weight:700;border:n;border-radius:10px;cursor:pointer;background:linear-gradient(135deg,var(--c-deep),var(--c-light));color:#fff;margin-bottom:11px;transition:opacity .15s;font-family:'DM Sans',sans-serif;}
 .auth-btn:disabled{opacity:.55;cursor:not-allowed;}
 .auth-alt{font-size:12.5px;color:var(--txt-3);text-align:center;cursor:pointer;}
 .auth-alt b{color:var(--c-light);}
@@ -448,7 +450,7 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 <div class="shell hide" id="appShell">
   <aside class="sidebar" id="sidebar">
     <div class="logo">
-      <div class="logo-mark"><span class="one">M1</span><span class="logo-dot"></span>MEDIA</div>
+      <div class="logo-mark"><span class="">M1</span><span class="logo-dot"></span>MEDIA</div>
       <div class="logo-sub">Centro de Control</div>
     </div>
     <nav id="navWrap"></nav>
@@ -473,7 +475,7 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 </div>
 
 <div id="modalRoot"></div>
-<div id="printArea" style="display:none"></div>
+<div id="printArea" style="display:n"></div>
 
 <script>
 /* ============ ICONS ============ */
@@ -520,7 +522,7 @@ const IC={
   printer:'<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v6H6z"/>',
   folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
   briefcase:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/>',
-  phone:'<path d="M5 4h4l2 5-3 2c1 3 3 5 6 6l2-3 5 2v4c0 1-1 2-2 2C12 24 2 14 2 6c0-1 1-2 3-2z"/>',
+  ph:'<path d="M5 4h4l2 5-3 2c1 3 3 5 6 6l2-3 5 2v4c0 1-1 2-2 2C12 24 2 14 2 6c0-1 1-2 3-2z"/>',
   mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5L12 13l8.5-6.5"/>',
   copy:'<rect x="8" y="8" width="13" height="13" rx="2"/><path d="M5 16H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"/>',
   inbox:'<path d="M4 13l2-9h12l2 9v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M4 13h5l1 3h4l1-3h5"/>',
@@ -535,7 +537,7 @@ const IC={
   attach:'<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>'
 };
 function ic(n,s){s=s||18;return`<span class="ico">${svg(n,s)}</span>`;}
-function svg(n,s){s=s||18;const p=IC[n]||IC.dot;return`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;}
+function svg(n,s){s=s||18;const p=IC[n]||IC.dot;return`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="n" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;}
 
 /* ============ CONFIG ============ */
 const DB_KEY='m1media_db_v6';
@@ -566,18 +568,18 @@ const METRICS={
     {k:'cpc',n:'Coste por clic',u:'€',hi:false,th:[0.3,0.6,1,2]},
     {k:'cpm',n:'CPM',u:'€',hi:false,th:[5,9,14,22]},
     {k:'ctr',n:'CTR',u:'%',hi:true,th:[0.8,1.2,1.8,2.5]},
-    {k:'conv',n:'Conversiones',u:'',hi:true,th:[5,15,30,50]},
+    {k:'conv',n:'Conversis',u:'',hi:true,th:[5,15,30,50]},
     {k:'convrate',n:'Tasa de conversión',u:'%',hi:true,th:[1,2.5,4,7]},
     {k:'reach',n:'Alcance',u:'',hi:true,th:[2000,8000,20000,50000]},
     {k:'freq',n:'Frecuencia',u:'',hi:false,th:[1.5,2.5,3.5,5]}
   ],
   social:[
     {k:'reach',n:'Alcance',u:'',hi:true,th:[2000,5000,12000,25000]},
-    {k:'impr',n:'Impresiones',u:'',hi:true,th:[3000,8000,20000,45000]},
+    {k:'impr',n:'Impresis',u:'',hi:true,th:[3000,8000,20000,45000]},
     {k:'eng',n:'Engagement',u:'%',hi:true,th:[1,2.5,4,6]},
-    {k:'inter',n:'Interacciones',u:'',hi:true,th:[100,400,1000,2500]},
+    {k:'inter',n:'Interaccis',u:'',hi:true,th:[100,400,1000,2500]},
     {k:'foll',n:'Seguidores nuevos',u:'',hi:true,th:[20,60,140,300]},
-    {k:'posts',n:'Publicaciones',u:'',hi:true,th:[4,8,12,18]},
+    {k:'posts',n:'Publicacis',u:'',hi:true,th:[4,8,12,18]},
     {k:'saves',n:'Guardados',u:'',hi:true,th:[20,80,200,500]},
     {k:'shares',n:'Compartidos',u:'',hi:true,th:[10,40,120,300]},
     {k:'profvis',n:'Visitas al perfil',u:'',hi:true,th:[150,500,1500,4000]},
@@ -588,7 +590,7 @@ const METRICS={
     {k:'users',n:'Usuarios únicos',u:'',hi:true,th:[200,600,1500,4000]},
     {k:'pos',n:'Posición media Google',u:'',hi:false,th:[20,12,7,3]},
     {k:'kw10',n:'Keywords top 10',u:'',hi:true,th:[3,10,25,60]},
-    {k:'conv',n:'Conversiones',u:'',hi:true,th:[3,10,25,50]},
+    {k:'conv',n:'Conversis',u:'',hi:true,th:[3,10,25,50]},
     {k:'convrate',n:'Tasa de conversión',u:'%',hi:true,th:[0.8,2,3.5,6]},
     {k:'speed',n:'Velocidad (0-100)',u:'',hi:true,th:[40,60,75,90]},
     {k:'bounce',n:'Tasa de rebote',u:'%',hi:false,th:[70,55,45,35]},
@@ -600,7 +602,7 @@ const METRICS={
     {k:'revenue',n:'Ingresos generados',u:'€',hi:true,th:[0,0,0,0],raw:true},
     {k:'leads',n:'Leads generados',u:'',hi:true,th:[5,15,35,70]},
     {k:'cpl',n:'Coste por lead',u:'€',hi:false,th:[5,10,20,35]},
-    {k:'conv',n:'Conversiones',u:'',hi:true,th:[5,15,30,60]},
+    {k:'conv',n:'Conversis',u:'',hi:true,th:[5,15,30,60]},
     {k:'convrate',n:'Tasa de conversión',u:'%',hi:true,th:[1,2.5,4,7]},
     {k:'eng',n:'Engagement',u:'%',hi:true,th:[1,2.5,4,6]},
     {k:'reach',n:'Alcance',u:'',hi:true,th:[3000,10000,25000,60000]},
@@ -621,10 +623,10 @@ const SVC_CATALOG=[
     local:{min:300,max:450},pyme:{min:500,max:800},premium:{min:900,max:1500},base:380,note:'Mínimo 3–6 meses para ver resultados reales'},
   {k:'content',n:'Creación de contenido',sub:'Carruseles, stories, reels y gráficas',
     local:{min:250,max:400},pyme:{min:450,max:700},premium:{min:800,max:1200},base:300,note:'Normalmente se vende junto con gestión de RRSS'},
-  {k:'auto',n:'Automatizaciones (n8n / chatbots)',sub:'Flujos automatizados, agentes IA y bots',
+  {k:'auto',n:'Automatizacis (n8n / chatbots)',sub:'Flujos automatizados, agentes IA y bots',
     local:{min:400,max:700},pyme:{min:800,max:1500},premium:{min:2000,max:5000},base:500,note:'Mantenimiento: 100–300€/mes según complejidad',once:true},
   {k:'branding',n:'Branding e identidad visual',sub:'Logo, paleta, tipografía y manual de marca',
-    local:{min:500,max:800},pyme:{min:900,max:1800},premium:{min:2500,max:5000},base:700,note:'Sin manual: rango inferior. Con guía+aplicaciones: rango superior',once:true},
+    local:{min:500,max:800},pyme:{min:900,max:1800},premium:{min:2500,max:5000},base:700,note:'Sin manual: rango inferior. Con guía+aplicacis: rango superior',once:true},
   {k:'video',n:'Edición de vídeo / reels',sub:'Montaje, subtítulos, color y música',
     local:{min:50,max:80},pyme:{min:200,max:400},premium:{min:500,max:900},base:65,note:'Con grabación presencial incluida: +150–300€/visita',perUnit:true,pmyeNote:'8–12 vídeos/mes',premiumNote:'producción alta'}
 ];
@@ -643,7 +645,7 @@ const NICHES=[
 const INACTIVITY_LIMIT=10*60*60*1000;
 const ACTIVITY_KEY='m1media_last_activity';
 function updateActivity(){localStorage.setItem(ACTIVITY_KEY,Date.now().toString());}
-function isSessionExpired(){
+function isSessixpired(){
   const last=parseInt(localStorage.getItem(ACTIVITY_KEY)||'0');
   if(!last)return false;
   return Date.now()-last>INACTIVITY_LIMIT;
@@ -661,7 +663,7 @@ async function loadDB(){
   try{
     const{data:{user}}=await sb.auth.getUser();
     if(!user){showAuthScreen();return false;}
-    if(isSessionExpired()){await sb.auth.signOut();showAuthScreen();return false;}
+    if(isSessixpired()){await sb.auth.signOut();showAuthScreen();return false;}
     currentUser=user;updateActivity();
     const{data,error}=await sb.from('user_data').select('data').eq('user_id',user.id).single();
     if(error||!data){db=seedDB();await doPersist();}
@@ -721,7 +723,7 @@ function showApp(){
       ${svg('x',14)} Cerrar sesión
     </button>`;
   }
-  if(!window._timersSet){window._timersSet=true;setInterval(tickDate,30000);setInterval(purgeOldDone,30000);setInterval(checkMeetingAlerts,60000);}
+  if(!window._timersSet){window._timersSet=true;setInterval(tickDate,30000);setInterval(purgeOldD,30000);setInterval(checkMeetingAlerts,60000);}
   try{render();}catch(e){console.error('render:',e);}
   updateActivity();
   document.addEventListener('click',updateActivity,{passive:true});
@@ -764,7 +766,7 @@ function seedDB(){
     seq:300,
     clients:[
       {id:1,name:'Centro Amara',service:'social',niche:'beauty',status:'active',retainer:280,color:'#3ECF8E',
-       contact:{person:'Laura Vidal',email:'centro@amara.es',phone:'+34600111222'},
+       contact:{person:'Laura Vidal',email:'centro@amara.es',ph:'+34600111222'},
        accesses:[{id:50,plat:'Instagram',user:'centroamara',pass:'••••••'}],
        meetings:[{id:60,date:today,time:'11:00',notes:'Aprobado calendario de contenido mensual'}],
        metricLog:[
@@ -772,14 +774,14 @@ function seedDB(){
          {id:71,month:m1,scope:'General',values:{reach:9200,impr:13400,eng:3.8,inter:520,foll:88,posts:11,saves:210,shares:78,profvis:690,clicks:140}}
        ]},
       {id:2,name:'AngleForge',service:'full',niche:'b2b',status:'active',retainer:0,color:'#A98BFF',
-       contact:{person:'Equipo AngleForge',email:'hola@angleforge.io',phone:''},
+       contact:{person:'Equipo AngleForge',email:'hola@angleforge.io',ph:''},
        accesses:[],meetings:[{id:61,date:today,time:'10:00',notes:'Briefing del rediseño de marca'}],
        metricLog:[
          {id:72,month:m2,scope:'General',values:{roas:2.8,revenue:1200,leads:18,cpl:14,conv:12,convrate:2.1,eng:2.4,reach:8000,ctr:1.1,foll:40}},
          {id:73,month:m1,scope:'General',values:{roas:3.4,revenue:1900,leads:26,cpl:11,conv:19,convrate:3.0,eng:3.0,reach:12000,ctr:1.6,foll:62}}
        ]},
       {id:3,name:'Fórmula CSF',service:'ads',niche:'edu',status:'paused',retainer:0,color:'#F5C147',
-       contact:{person:'Modou (interno)',email:'',phone:''},
+       contact:{person:'Modou (interno)',email:'',ph:''},
        accesses:[],meetings:[],
        metricLog:[{id:74,month:m2,scope:'Campaña Lanzamiento',values:{roas:1.9,spend:300,revenue:570,cpl:14,cpc:0.7,cpm:11,ctr:1.1,conv:9,convrate:2.0,reach:14000,freq:2.1}}]}
     ],
@@ -807,24 +809,24 @@ function seedDB(){
       {id:127,concept:'Canva Pro',cat:'Herramientas / Software',type:'fijo',amount:12,date:m1}
     ],
     tasks:[
-      {id:140,text:'Crear contenido de la semana para Centro Amara',cli:1,prio:'alta',done:false,doneAt:0,due:'',createdAt:Date.now()},
-      {id:141,text:'Crear prompts de prueba con el nuevo estilo del rediseño',cli:2,prio:'media',done:false,doneAt:0,due:'',createdAt:Date.now()},
-      {id:142,text:'Preparar llamadas de demo para mañana',cli:0,prio:'alta',done:false,doneAt:0,due:'',createdAt:Date.now()},
-      {id:143,text:'Crear 2-4 plantillas de documento para Claude Code',cli:0,prio:'alta',done:false,doneAt:0,due:'',createdAt:Date.now()}
+      {id:140,text:'Crear contenido de la semana para Centro Amara',cli:1,prio:'alta',d:false,dAt:0,due:'',createdAt:Date.now()},
+      {id:141,text:'Crear prompts de prueba con el nuevo estilo del rediseño',cli:2,prio:'media',d:false,dAt:0,due:'',createdAt:Date.now()},
+      {id:142,text:'Preparar llamadas de demo para mañana',cli:0,prio:'alta',d:false,dAt:0,due:'',createdAt:Date.now()},
+      {id:143,text:'Crear 2-4 plantillas de documento para Claude Code',cli:0,prio:'alta',d:false,dAt:0,due:'',createdAt:Date.now()}
     ],
     leads:[
       {id:160,name:'Restaurante Sol',channel:'Instagram',stage:'Contactado',value:450,date:m,createdAt:m+'-05',niche:'local',notes:'',meetingDate:'',meetingTime:''},
-      {id:161,name:'Clínica Dental Vega',channel:'WhatsApp',stage:'Propuesta',value:900,date:m,createdAt:m+'-08',niche:'health',phone:'',notes:'Propuesta enviada el día 18',meetingDate:'',meetingTime:''},
+      {id:161,name:'Clínica Dental Vega',channel:'WhatsApp',stage:'Propuesta',value:900,date:m,createdAt:m+'-08',niche:'health',ph:'',notes:'Propuesta enviada el día 18',meetingDate:'',meetingTime:''},
       {id:162,name:'Gimnasio Pulse',channel:'Referido',stage:'Reunión',value:600,date:m,createdAt:m+'-10',niche:'fitness',notes:'',meetingDate:shiftDay(today,3),meetingTime:'10:00'},
       {id:163,name:'Tienda Maya',channel:'Web',stage:'Nuevo lead',value:300,date:m,createdAt:m+'-12',niche:'ecom',notes:'',meetingDate:'',meetingTime:''},
       {id:164,name:'Bar Toni',channel:'Instagram',stage:'Ganado',value:280,date:m1,createdAt:m1+'-15',niche:'local',notes:'',wonAt:m1,meetingDate:'',meetingTime:''},
-      {id:165,name:'Estética Natural Feeling',channel:'Llamada fría',stage:'Contactado',value:550,date:m,createdAt:m+'-14',niche:'beauty',phone:'',notes:'',meetingDate:'',meetingTime:''},
+      {id:165,name:'Estética Natural Feeling',channel:'Llamada fría',stage:'Contactado',value:550,date:m,createdAt:m+'-14',niche:'beauty',ph:'',notes:'',meetingDate:'',meetingTime:''},
       {id:166,name:'Fernando González Arquitectos',channel:'LinkedIn',stage:'Reunión',value:700,date:m,createdAt:m+'-01',niche:'b2b',notes:'Demo reunión RRSS',meetingDate:shiftDay(today,1),meetingTime:'10:00'},
-      {id:167,name:'Jonás - Entrenador Calistenia',channel:'Instagram',stage:'Reunión',value:400,date:m,createdAt:m+'-02',niche:'fitness',notes:'Posponer a finales de junio, muy interesado pero quiere entrenarlo para que sea lo más humano posible',meetingDate:shiftDay(today,12),meetingTime:'10:00'},
+      {id:167,name:'Jonás - Entrenador Calistenia',channel:'Instagram',stage:'Reunión',value:400,date:m,createdAt:m+'-02',niche:'fitness',notes:'Pospr a finales de junio, muy interesado pero quiere entrenarlo para que sea lo más humano posible',meetingDate:shiftDay(today,12),meetingTime:'10:00'},
       {id:168,name:'Eduardo de Talleres Baleares',channel:'WhatsApp',stage:'Reunión',value:800,date:m,createdAt:m+'-03',niche:'local',notes:'Chatbot whatsapp',meetingDate:shiftDay(today,67),meetingTime:'10:00'}
     ],
     workers:[
-      {id:200,name:'Modou Diaw',role:'Fundador & Especialista Meta Ads',color:'#74AAFF',email:'modou@m1media.es',phone:'+34631103840',skills:['Meta Ads','Estrategia','AI Agents','Copywriting'],status:'active',salary:0,type:'founder',tasks:0,clients:3}
+      {id:200,name:'Modou Diaw',role:'Fundador & Especialista Meta Ads',color:'#74AAFF',email:'modou@m1media.es',ph:'+34631103840',skills:['Meta Ads','Estrategia','AI Agents','Copywriting'],status:'active',salary:0,type:'founder',tasks:0,clients:3}
     ],
     objectives:{
       monthly:[
@@ -964,7 +966,7 @@ function lineChart(data,opt){
   let lines='',dots='',labels='';
   series.forEach(s=>{
     const pts=data.map((_,i)=>xs[i]+','+ys(data[i][s.key]||0)).join(' ');
-    lines+=`<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.2" stroke-linejoin="round"/>`;
+    lines+=`<polyline points="${pts}" fill="n" stroke="${s.color}" stroke-width="2.2" stroke-linejoin="round"/>`;
     data.forEach((d,i)=>dots+=`<circle cx="${xs[i]}" cy="${ys(d[s.key]||0)}" r="4" fill="${s.color}"><title>${esc(d.label)}: ${fmtK(d[s.key]||0)}</title></circle>`);
   });
   const skip=Math.ceil(data.length/10);
@@ -992,7 +994,7 @@ function healthRing(score,size){
   const c=score==null?'#6b74a0':score>=80?'#3ECF8E':score>=60?'#5BC98E':score>=40?'#F5C147':score>=25?'#F2974D':'#F47174';
   const pct=score==null?0:score/100;
   const circ=2*Math.PI*r;
-  return`<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2e3760" stroke-width="3.5"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${c}" stroke-width="3.5" stroke-dasharray="${circ*pct} ${circ*(1-pct)}" stroke-dashoffset="${circ*0.25}" transform="rotate(-90 ${cx} ${cy})"/><text x="${cx}" y="${cy+4.5}" text-anchor="middle" font-size="${size>44?13:10}" font-weight="700" fill="${c}">${score==null?'?':score}</text></svg>`;
+  return`<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}"><circle cx="${cx}" cy="${cy}" r="${r}" fill="n" stroke="#2e3760" stroke-width="3.5"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="n" stroke="${c}" stroke-width="3.5" stroke-dasharray="${circ*pct} ${circ*(1-pct)}" stroke-dashoffset="${circ*0.25}" transform="rotate(-90 ${cx} ${cy})"/><text x="${cx}" y="${cy+4.5}" text-anchor="middle" font-size="${size>44?13:10}" font-weight="700" fill="${c}">${score==null?'?':score}</text></svg>`;
 }
 
 /* ============ DATE TICK ============ */
@@ -1011,14 +1013,14 @@ const NAV=[
   {t:'presupuestos',n:'Presupuestos',i:'calc',sub:'Calcula precios y genera propuestas'},
   {t:'finanzas',n:'Finanzas',i:'coin',sub:'Ingresos, costes y rentabilidad'},
   {t:'evolucion',n:'Evolución',i:'chart',sub:'Tendencias por periodo'},
-  {t:'calendario',n:'Calendario',i:'calendar',sub:'Reuniones y seguimientos'},
+  {t:'calendario',n:'Calendario',i:'calendar',sub:'Reunis y seguimientos'},
   {t:'tareas',n:'Tareas',i:'check',sub:'Organización y alertas'},
   {t:'trabajadores',n:'Trabajadores',i:'workers',sub:'Panel del equipo'},
 ];
 function buildNav(){
   $('navWrap').innerHTML=NAV.map(x=>`
     <div class="nav-item${x.t===curTab?' active':''}" data-tab="${x.t}">
-      ${ic(x.i,18)}<span>${x.n}</span>${x.t==='tareas'?'<span class="badge" id="navBadge" style="display:none">0</span>':''}
+      ${ic(x.i,18)}<span>${x.n}</span>${x.t==='tareas'?'<span class="badge" id="navBadge" style="display:n">0</span>':''}
     </div>`).join('');
   $('navWrap').querySelectorAll('.nav-item').forEach(n=>{
     n.onclick=()=>{curTab=n.dataset.tab;if(curTab==='clientes')curClient=null;render();if(window.innerWidth<=860)closeSidebar();};
@@ -1046,9 +1048,9 @@ function render(){
   updateBadge();
 }
 function updateBadge(){
-  const pend=db.tasks.filter(t=>!t.done).length;
+  const pend=db.tasks.filter(t=>!t.d).length;
   const b=$('navBadge');if(!b)return;
-  if(pend>0){b.style.display='';b.textContent=pend;}else b.style.display='none';
+  if(pend>0){b.style.display='';b.textContent=pend;}else b.style.display='n';
 }
 /* ============ ALERTS ============ */
 let lastAlerts=[];
@@ -1071,7 +1073,7 @@ function computeAlerts(){
     }
     if(c.status==='active'&&c.meetings&&c.meetings.length){
       const recent=c.meetings.some(mt=>(Date.now()-new Date(mt.date))/86400000<35);
-      if(!recent)out.push({key:'meet-'+c.id,crit:false,prio:'baja',text:'Sin reuniones recientes con '+c.name+' (+35 días)',report:{
+      if(!recent)out.push({key:'meet-'+c.id,crit:false,prio:'baja',text:'Sin reunis recientes con '+c.name+' (+35 días)',report:{
         diag:'Han pasado más de 35 días desde la última reunión con '+c.name+'.',
         why:'La falta de contacto reduce la percepción de valor del servicio.',
         actions:['Escribe o llama a '+contact+' para agendar una puesta al día.','Comparte un informe de resultados.','Registra la reunión cuando se realice.']
@@ -1087,7 +1089,7 @@ function computeAlerts(){
       actions:['Envía un recordatorio amable de pago.','Confirma la fecha prevista de cobro.','En Finanzas, marca el ingreso como Cobrado cuando se resuelva.']
     }});
   }
-  const overdue=db.tasks.filter(t=>!t.done&&!t.isAlert&&t.due&&t.due<dayKey());
+  const overdue=db.tasks.filter(t=>!t.d&&!t.isAlert&&t.due&&t.due<dayKey());
   if(overdue.length){
     out.push({key:'overdue-tasks',crit:true,prio:'crit',text:'⚠ '+overdue.length+' tarea(s) vencida(s)',report:{
       diag:'Tienes '+overdue.length+' tarea(s) cuya fecha ya ha pasado.',
@@ -1095,7 +1097,7 @@ function computeAlerts(){
       actions:['Ve a Tareas y revisa cuáles están vencidas.','Reprograma sus fechas de entrega.','Prioriza las de clientes activos.']
     }});
   }
-  // Reuniones próximas (2 días)
+  // Reunis próximas (2 días)
   const soon=gatherAllEvents().filter(e=>e.date&&daysUntil(e.date)===2);
   if(soon.length){
     out.push({key:'meeting-soon',crit:false,prio:'media',text:'📅 '+soon.length+' reunión(es) en 2 días',report:{
@@ -1116,7 +1118,7 @@ function syncAlertTasks(){
   alerts.forEach(a=>{
     const ex=db.tasks.find(t=>t.isAlert&&t.alertKey===a.key);
     if(ex){ex.text=a.text;ex.prio=a.prio;ex.crit=a.crit;}
-    else db.tasks.unshift({id:uid(),text:a.text,prio:a.prio,cli:0,done:false,doneAt:0,due:'',isAlert:true,alertKey:a.key,crit:a.crit});
+    else db.tasks.unshift({id:uid(),text:a.text,prio:a.prio,cli:0,d:false,dAt:0,due:'',isAlert:true,alertKey:a.key,crit:a.crit});
   });
 }
 function openAlertReport(i){
@@ -1174,7 +1176,7 @@ function viewDashboard(){
   let alertHtml;
   if(!alerts.length)alertHtml=`<div class="alert g" style="cursor:default">${ic('checkC',18)}<div><div class="at">Todo en orden</div><div class="ad">No hay alertas activas.</div></div></div>`;
   else alertHtml=alerts.map((a,i)=>`<div class="alert ${a.crit?'r':'a'}" onclick="openAlertReport(${i})">${ic(a.crit?'alertT':'alertC',18)}<div><div class="at">${esc(a.text)}</div><div class="ad">Toca para ver el informe y pasos recomendados.</div></div></div>`).join('');
-  // Próximas reuniones en dashboard
+  // Próximas reunis en dashboard
   const upcoming=gatherAllEvents().filter(e=>e.date>=dayKey()).slice(0,3);
   return `
     <div class="row-head" style="margin-top:10px"><h2>Indicadores clave</h2><span class="meta">${ymLabel(cm)} · vs mes anterior</span></div>
@@ -1189,7 +1191,7 @@ function viewDashboard(){
     <div class="row-head"><h2>Alertas</h2><span class="meta">${alerts.length} activa(s)</span></div>
     <div>${alertHtml}</div>
     ${upcoming.length?`
-    <div class="row-head"><h2>Próximas reuniones</h2></div>
+    <div class="row-head"><h2>Próximas reunis</h2></div>
     <div class="panel">
       ${upcoming.map(e=>{
         const d=daysUntil(e.date);
@@ -1282,7 +1284,7 @@ function viewCRM(){
         </div>`).join('')}
       </div>
       ${monthLeads.length?`<table class="tbl"><thead><tr>
-        <th>Lead</th><th>Canal</th><th>Sector</th><th>Estado</th><th style="text-align:right">Valor</th><th>Acciones</th>
+        <th>Lead</th><th>Canal</th><th>Sector</th><th>Estado</th><th style="text-align:right">Valor</th><th>Accis</th>
       </tr></thead><tbody>
         ${monthLeads.map(l=>`<tr>
           <td style="font-weight:600">${esc(l.name)}</td>
@@ -1332,7 +1334,7 @@ async function convertLeadToClient(leadId){
     id:uid(),name:l.name,service:l.niche==='edu'?'ads':l.niche==='ecom'?'ads':'social',
     niche:l.niche,status:'active',retainer:l.value||0,
     color:PRESET_COLORS[db.clients.length%PRESET_COLORS.length],
-    contact:{person:'',email:'',phone:l.phone||''},
+    contact:{person:'',email:'',ph:l.ph||''},
     accesses:[],meetings:[],metricLog:[]
   };
   db.clients.push(newClient);
@@ -1429,9 +1431,9 @@ function viewClientDetail(){
     ${ic('calendar',15)}
     <span class="ai-plat">${new Date(mt.date).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'})}${mt.time?' · '+mt.time+'h':''}</span>
     <span class="ai-cred" style="font-family:'DM Sans',sans-serif;flex:2">${esc(mt.notes||'Sin notas')}</span>
-    ${mt.link?`<a href="${esc(mt.link)}" target="_blank" style="color:var(--c-light);text-decoration:none">${ic('link',13)}</a>`:''}
+    ${mt.link?`<a href="${esc(mt.link)}" target="_blank" style="color:var(--c-light);text-decoration:n">${ic('link',13)}</a>`:''}
     <span class="mini-del" onclick="delMeeting(${mt.id})">${ic('trash',15)}</span>
-  </div>`).join('')||'<div class="mini" style="padding:6px 0">Sin reuniones registradas.</div>';
+  </div>`).join('')||'<div class="mini" style="padding:6px 0">Sin reunis registradas.</div>';
 
   return `
     <div class="cd-back" onclick="closeClientDetail()">${ic('back',16)}Volver a clientes</div>
@@ -1456,7 +1458,7 @@ function viewClientDetail(){
         <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:10px">Ficha del cliente</div>
         <div class="info-row"><span class="k">Contacto</span><span class="v">${esc(c.contact.person||'—')}</span></div>
         <div class="info-row"><span class="k">Email</span><span class="v">${esc(c.contact.email||'—')}</span></div>
-        <div class="info-row"><span class="k">Teléfono</span><span class="v">${esc(c.contact.phone||'—')}</span></div>
+        <div class="info-row"><span class="k">Teléfono</span><span class="v">${esc(c.contact.ph||'—')}</span></div>
         <div class="info-row"><span class="k">Sector / nicho</span><span class="v">${esc((NICHES.find(x=>x.k===c.niche)||{}).n||'—')}</span></div>
         <div class="info-row"><span class="k">Retainer mensual</span><span class="v">${c.retainer?eur(c.retainer):'—'}</span></div>
         <div class="info-row"><span class="k">Total facturado</span><span class="v" style="color:var(--green)">${eur(inc)}</span></div>
@@ -1473,7 +1475,7 @@ function viewClientDetail(){
     </div>
     ${lastEntries.length?metricsHtml:'<div class="panel"><div class="empty">'+ic('dots',30)+'<div>Sin métricas aún</div></div></div>'}
     ${evoChart}
-    <div class="row-head"><h2>Historial de reuniones</h2>
+    <div class="row-head"><h2>Historial de reunis</h2>
       <button class="btn btn-primary btn-sm" onclick="openMeetingModal()">${ic('plus',15)}Nueva reunión</button>
     </div>
     <div class="panel">${meetings}</div>`;
@@ -1806,7 +1808,7 @@ function calDayClick(date){
             <span>${new Date(e.date+'T12:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'})} · ${e.time||'10:00'}h</span>
             ${e.sub?`<span style="color:var(--txt-2)">${esc(e.sub)}</span>`:''}
           </div>
-          ${e.link?`<div style="margin-top:6px"><a href="${esc(e.link)}" target="_blank" style="color:var(--c-light);font-size:11.5px;text-decoration:none;display:flex;align-items:center;gap:4px">${ic('link',13)} ${esc(e.link)}</a></div>`:''}
+          ${e.link?`<div style="margin-top:6px"><a href="${esc(e.link)}" target="_blank" style="color:var(--c-light);font-size:11.5px;text-decoration:n;display:flex;align-items:center;gap:4px">${ic('link',13)} ${esc(e.link)}</a></div>`:''}
           ${e.attachments&&e.attachments.length?`<div style="margin-top:5px;font-size:11px;color:var(--txt-3)">${ic('attach',11)} ${e.attachments.join(', ')}</div>`:''}
         </div>
         <span class="pill pill-cli">${e.type==='lead'?'Lead':'Cliente'}</span>
@@ -1852,7 +1854,7 @@ function addToGoogleCalendar(meetingId){
   const events=gatherAllEvents();const e=events.find(x=>x.id===meetingId);if(!e)return;
   const dt=e.date.replace(/-/g,'');const tm=(e.time||'10:00').replace(':','')+'00';
   const dtEnd=dt+'T'+String(parseInt(tm.slice(0,2))+1).padStart(2,'0')+tm.slice(2);
-  const url=`https://calendar.google.com/calendar/r/eventedit?text=${encodeURIComponent(e.title)}&dates=${dt}T${tm}/${dtEnd}&details=${encodeURIComponent(e.sub||'')}${e.link?'&location='+encodeURIComponent(e.link):''}`;
+  const url=`https://calendar.google.com/calendar/r/eventedit?text=${encodeURICompnt(e.title)}&dates=${dt}T${tm}/${dtEnd}&details=${encodeURICompnt(e.sub||'')}${e.link?'&location='+encodeURICompnt(e.link):''}`;
   window.open(url,'_blank');
   toast('Redirigiendo a Google Calendar...','info');
 }
@@ -1895,7 +1897,7 @@ function viewCalendario(){
         ${cells}
       </div>
     </div>
-    <div class="row-head"><h2>Próximas reuniones</h2><span class="meta">${upcoming.length} eventos</span></div>
+    <div class="row-head"><h2>Próximas reunis</h2><span class="meta">${upcoming.length} eventos</span></div>
     <div class="tlist">
       ${upcoming.length?upcoming.map(e=>{
         const d=daysUntil(e.date);
@@ -1914,7 +1916,7 @@ function viewCalendario(){
             ${isSoon?`<span class="cal-upcoming-badge">${d===0?'HOY':d===1?'Mañana':'2 días'}</span>`:''}
           </div>
         </div>`;
-      }).join(''):'<div class="empty">'+ic('calendar',30)+'<div>Sin reuniones próximas</div></div>'}
+      }).join(''):'<div class="empty">'+ic('calendar',30)+'<div>Sin reunis próximas</div></div>'}
     </div>`;
 }
 /* ============ VIEW: TAREAS ============ */
@@ -1933,30 +1935,30 @@ function viewTareas(){
       <button data-f="pending">Pendientes</button>
       <button data-f="today">Hoy</button>
       <button data-f="week">Esta semana</button>
-      <button data-f="done">Completadas</button>
+      <button data-f="d">Completadas</button>
     </div>
     <div id="tkActive">${renderTaskActive()}</div>`;
 }
 function renderTaskActive(){
   const today=dayKey(),weekEnd=shiftDay(today,7);
   const filtered=db.tasks.filter(t=>{
-    if(taskFilter==='pending')return!t.done;
-    if(taskFilter==='done')return t.done;
-    if(taskFilter==='today')return!t.done&&t.due===today;
-    if(taskFilter==='week')return!t.done&&t.due&&t.due>=today&&t.due<=weekEnd;
+    if(taskFilter==='pending')return!t.d;
+    if(taskFilter==='d')return t.d;
+    if(taskFilter==='today')return!t.d&&t.due===today;
+    if(taskFilter==='week')return!t.d&&t.due&&t.due>=today&&t.due<=weekEnd;
     return true;
   }).slice(0,60);
   if(!filtered.length)return'<div class="empty">'+ic('check',30)+'<div>Sin tareas en esta vista</div></div>';
   return`<div class="tlist">${filtered.map(t=>{
     const isAlert=t.isAlert,crit=t.crit;
-    const isSoon=!t.done&&t.due&&daysUntil(t.due)<=2&&daysUntil(t.due)>=0;
+    const isSoon=!t.d&&t.due&&daysUntil(t.due)<=2&&daysUntil(t.due)>=0;
     let dueHtml='';
-    if(t.due&&!t.done){
+    if(t.due&&!t.d){
       const d=daysUntil(t.due);
       dueHtml=`<span class="${d<0?'due-over':d<=2?'due-soon':''}">${d<0?'Vencida hace '+Math.abs(d)+' días':d===0?'Hoy':d===1?'Mañana':'En '+d+' días'}</span>`;
     }
-    return`<div class="titem${t.done?' done':''}${crit?' alert-crit':''}${isSoon?' upcoming-task':''}">
-      ${!isAlert?`<div class="tcheck${t.done?' on':''}" onclick="toggleTask(${t.id})">${t.done?ic('checks',14):''}</div>`:''}
+    return`<div class="titem${t.d?' d':''}${crit?' alert-crit':''}${isSoon?' upcoming-task':''}">
+      ${!isAlert?`<div class="tcheck${t.d?' on':''}" onclick="toggleTask(${t.id})">${t.d?ic('checks',14):''}</div>`:''}
       <div class="prio prio-${crit?'crit':t.prio}"></div>
       <div class="tbody">
         <div class="ttext">${esc(t.text)}</div>
@@ -1988,7 +1990,7 @@ function viewTrabajadores(){
     ${workers.length===0?`<div class="panel" style="margin-top:14px"><div class="empty">${ic('workers',32)}<div>Aún no hay miembros del equipo<br>Añade colaboradores o freelancers</div></div></div>`:''}`;
 }
 function workerCardHtml(w){
-  const taskCount=db.tasks.filter(t=>t.workerId===w.id&&!t.done).length;
+  const taskCount=db.tasks.filter(t=>t.workerId===w.id&&!t.d).length;
   const clientCount=w.clients||(w.type==='founder'?db.clients.filter(c=>c.status==='active').length:0);
   return `<div class="worker-card">
     <div class="worker-avatar" style="background:${w.color||'#74AAFF'}">${initials(w.name)}</div>
@@ -2005,7 +2007,7 @@ function workerCardHtml(w){
     </div>
     <div class="ccard-actions" style="margin-top:12px">
       ${w.email?`<a href="mailto:${esc(w.email)}" class="iconbtn" title="Email">${svg('mail',15)}</a>`:''}
-      ${w.phone?`<a href="tel:${esc(w.phone)}" class="iconbtn" title="Llamar">${svg('phone',15)}</a>`:''}
+      ${w.ph?`<a href="tel:${esc(w.ph)}" class="iconbtn" title="Llamar">${svg('ph',15)}</a>`:''}
       <div class="iconbtn flex1" onclick="openWorkerModal(${w.id})" title="Editar">${svg('edit',15)}</div>
       ${w.type!=='founder'?`<div class="iconbtn danger" onclick="delWorker(${w.id})" title="Eliminar">${svg('trash',15)}</div>`:''}
     </div>
@@ -2023,7 +2025,7 @@ function openWorkerModal(id){
       </div>
       <div class="split">
         <div class="field"><label>Email</label><input id="wkEmail" type="email" value="${w?esc(w.email||''):''}" placeholder="email@..."></div>
-        <div class="field"><label>Teléfono</label><input id="wkPhone" value="${w?esc(w.phone||''):''}" placeholder="+34600..."></div>
+        <div class="field"><label>Teléfono</label><input id="wkPh" value="${w?esc(w.ph||''):''}" placeholder="+34600..."></div>
       </div>
       <div class="split">
         <div class="field"><label>Tipo de relación</label><select id="wkType">
@@ -2044,7 +2046,7 @@ function openWorkerModal(id){
 }
 async function saveWorker(id){
   const name=$('wkName').value.trim();if(!name){alert('Indica el nombre');return;}
-  const data={name,role:$('wkRole').value.trim(),email:$('wkEmail').value.trim(),phone:$('wkPhone').value.trim(),
+  const data={name,role:$('wkRole').value.trim(),email:$('wkEmail').value.trim(),ph:$('wkPh').value.trim(),
     type:$('wkType').value,salary:parseFloat($('wkSalary').value)||0,
     skills:$('wkSkills').value.split(',').map(s=>s.trim()).filter(Boolean),
     color:pickedColor,status:'active'};
@@ -2062,7 +2064,7 @@ function $(id){return document.getElementById(id);}
 let pickedColor='#74AAFF';
 function modal(html){const r=$('modalRoot');r.innerHTML=`<div class="modal-overlay" onclick="closeModalNow()">${html}</div>`;r.querySelector('.modal').addEventListener('click',e=>e.stopPropagation());}
 function closeModalNow(){const r=$('modalRoot');r.innerHTML='';}
-function colorPicker(cur){return`<div class="color-picker-row" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:4px">${PRESET_COLORS.map(c=>`<div onclick="pickColor('${c}')" style="width:24px;height:24px;border-radius:50%;background:${c};cursor:pointer;border:3px solid ${c===cur?'#fff':'transparent'};transition:all .15s" id="cp_${c.replace('#','')}"></div>`).join('')}<input type="color" id="cpCustom" value="${cur||'#74AAFF'}" onchange="pickColor(this.value)" style="width:28px;height:28px;border:none;border-radius:50%;cursor:pointer;background:none;padding:0"></div>`;}
+function colorPicker(cur){return`<div class="color-picker-row" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:4px">${PRESET_COLORS.map(c=>`<div onclick="pickColor('${c}')" style="width:24px;height:24px;border-radius:50%;background:${c};cursor:pointer;border:3px solid ${c===cur?'#fff':'transparent'};transition:all .15s" id="cp_${c.replace('#','')}"></div>`).join('')}<input type="color" id="cpCustom" value="${cur||'#74AAFF'}" onchange="pickColor(this.value)" style="width:28px;height:28px;border:n;border-radius:50%;cursor:pointer;background:n;padding:0"></div>`;}
 function pickColor(c){pickedColor=c;document.querySelectorAll('[id^=cp_]').forEach(el=>el.style.border='3px solid transparent');const el=$('cp_'+c.replace('#',''));if(el)el.style.border='3px solid #fff';}
 
 /* ============ LEAD MODALS ============ */
@@ -2074,7 +2076,7 @@ function openLeadModal(id){
     <div class="form-grid">
       <div class="split">
         <div class="field"><label>Nombre / empresa</label><input id="ldName" value="${l?esc(l.name):''}" placeholder="Nombre Empresa S.L."></div>
-        <div class="field"><label>Teléfono</label><input id="ldPhone" value="${l?esc(l.phone||''):''}" placeholder="+34600..."></div>
+        <div class="field"><label>Teléfono</label><input id="ldPh" value="${l?esc(l.ph||''):''}" placeholder="+34600..."></div>
       </div>
       <div class="split">
         <div class="field"><label>Sector / nicho</label><input id="ldNiche" value="${l?esc(l.niche||''):''}" placeholder="Restauración, Clínica..."></div>
@@ -2093,7 +2095,7 @@ function openLeadModal(id){
         <div class="field"><label>Hora reunión</label><input id="ldTime" type="time" value="${l&&l.meetTime?l.meetTime:'10:00'}"></div>
       </div>
       <div class="field"><label>Enlace reunión (Meet/Zoom)</label><input id="ldLink" type="url" value="${l?esc(l.meetLink||''):''}" placeholder="https://meet.google.com/..."></div>
-      <div class="field"><label>Notas</label><textarea id="ldNotes" rows="3" placeholder="Observaciones sobre el lead...">${l?esc(l.notes||''):''}</textarea></div>
+      <div class="field"><label>Notas</label><textarea id="ldNotes" rows="3" placeholder="Observacis sobre el lead...">${l?esc(l.notes||''):''}</textarea></div>
       <div class="field"><label>Color</label>${colorPicker(pickedColor)}</div>
     </div>
     <div class="modal-foot">
@@ -2105,7 +2107,7 @@ function openLeadModal(id){
 async function saveLead(id){
   const name=$('ldName').value.trim();if(!name){alert('Indica nombre');return;}
   const stage=$('ldStage').value;
-  const data={name,phone:$('ldPhone').value.trim(),niche:$('ldNiche').value.trim(),
+  const data={name,ph:$('ldPh').value.trim(),niche:$('ldNiche').value.trim(),
     source:$('ldSource').value,value:parseFloat($('ldValue').value)||0,stage,
     meetDate:$('ldDate').value||'',meetTime:$('ldTime').value||'',
     meetLink:$('ldLink').value.trim(),notes:$('ldNotes').value.trim(),
@@ -2136,7 +2138,7 @@ async function delLead(id){
 function openClientModal(id){
   const c=id?db.clients.find(x=>x.id===id):null;
   pickedColor=c?c.color:PRESET_COLORS[db.clients.length%PRESET_COLORS.length];
-  const SERVICES=['Meta Ads','Gestión RRSS','Contenido Orgánico','SEO','Diseño Web','Automatizaciones','Branding','Vídeo/Reels','Email Marketing','Otro'];
+  const SERVICES=['Meta Ads','Gestión RRSS','Contenido Orgánico','SEO','Diseño Web','Automatizacis','Branding','Vídeo/Reels','Email Marketing','Otro'];
   modal(`<div class="modal wide">
     <h3>${ic('user',18)}${id?'Editar cliente':'Nuevo cliente'}</h3>
     <div class="form-grid">
@@ -2152,10 +2154,10 @@ function openClientModal(id){
         <div class="field"><label>Email</label><input id="clEmail" type="email" value="${c&&c.contact?esc(c.contact.email||''):''}" placeholder="email@..."></div>
       </div>
       <div class="split">
-        <div class="field"><label>Teléfono</label><input id="clPhone" value="${c&&c.contact?esc(c.contact.phone||''):''}" placeholder="+34..."></div>
+        <div class="field"><label>Teléfono</label><input id="clPh" value="${c&&c.contact?esc(c.contact.ph||''):''}" placeholder="+34..."></div>
         <div class="field"><label>Fecha inicio</label><input id="clStart" type="date" value="${c?c.startDate||'':''}"></div>
       </div>
-      <div class="field"><label>Notas internas</label><textarea id="clNotes" rows="3" placeholder="Observaciones...">${c?esc(c.notes||''):''}</textarea></div>
+      <div class="field"><label>Notas internas</label><textarea id="clNotes" rows="3" placeholder="Observacis...">${c?esc(c.notes||''):''}</textarea></div>
       <div class="field"><label>Color</label>${colorPicker(pickedColor)}</div>
     </div>
     <div class="modal-foot">
@@ -2167,7 +2169,7 @@ function openClientModal(id){
 async function saveClient(id){
   const name=$('clName').value.trim();if(!name){alert('Indica nombre');return;}
   const data={name,retainer:parseFloat($('clRet').value)||0,service:$('clSvc').value,
-    contact:{person:$('clPerson').value.trim(),email:$('clEmail').value.trim(),phone:$('clPhone').value.trim()},
+    contact:{person:$('clPerson').value.trim(),email:$('clEmail').value.trim(),ph:$('clPh').value.trim()},
     startDate:$('clStart').value||dayKey(),notes:$('clNotes').value.trim(),color:pickedColor,status:'active'};
   if(id&&id!=='null'){
     const c=db.clients.find(x=>x.id===id);
@@ -2221,16 +2223,16 @@ async function saveMeeting(){
   const c=db.clients.find(x=>x.id===cliId);if(!c)return;
   const mt={id:uid(),type:$('mtType').value,date:$('mtDate').value,time:$('mtTime').value,
     duration:parseInt($('mtDur').value)||60,link:$('mtLink').value.trim(),
-    notes:$('mtNotes').value.trim(),done:false,createdAt:dayKey()};
+    notes:$('mtNotes').value.trim(),d:false,createdAt:dayKey()};
   c.meetings.push(mt);
   await persistDB();closeModalNow();render();
   toast('Reunión guardada','success');
   // Auto-add to Google Calendar
-  const title=encodeURIComponent(`[M1 Media] ${c.name} · ${mt.type}`);
+  const title=encodeURICompnt(`[M1 Media] ${c.name} · ${mt.type}`);
   const dt=mt.date.replace(/-/g,'')+'T'+(mt.time||'10:00').replace(':','')+'00';
   const endH=mt.date.replace(/-/g,'')+'T'+addMinutes(mt.time||'10:00',mt.duration);
-  const loc=encodeURIComponent(mt.link||'');
-  const notes=encodeURIComponent(mt.notes||'');
+  const loc=encodeURICompnt(mt.link||'');
+  const notes=encodeURICompnt(mt.notes||'');
   window.open(`https://calendar.google.com/calendar/r/eventedit?text=${title}&dates=${dt}/${endH}&location=${loc}&details=${notes}&sf=true`,'_blank');
 }
 function addMinutes(time,mins){
@@ -2303,7 +2305,7 @@ async function saveMetrics(clientId){
 }
 function addCustomDef(clientId){
   const c=db.clients.find(x=>x.id===clientId);if(!c)return;
-  const label=prompt('Nombre de la métrica (ej: Conversiones):');if(!label)return;
+  const label=prompt('Nombre de la métrica (ej: Conversis):');if(!label)return;
   if(!c.metricDefs)c.metricDefs=[{key:'followers',label:'Seguidores'},{key:'reach',label:'Alcance'},{key:'leads_gen',label:'Leads generados'},{key:'roas',label:'ROAS'}];
   const key='custom_'+uid();
   c.metricDefs.push({key,label});
@@ -2400,20 +2402,20 @@ async function addTask(){
   const prio=$('taskPrio')?$('taskPrio').value:'normal';
   const due=$('taskDue')?$('taskDue').value:'';
   const cli=$('taskCli')?parseInt($('taskCli').value)||0:0;
-  db.tasks.unshift({id:uid(),text,prio,due,cli,done:false,doneAt:0,isAlert:false,crit:false,createdAt:dayKey()});
+  db.tasks.unshift({id:uid(),text,prio,due,cli,d:false,dAt:0,isAlert:false,crit:false,createdAt:dayKey()});
   await persistDB();render();if(inp){inp.value='';inp.focus();}
 }
 async function toggleTask(id){
   const t=db.tasks.find(x=>x.id===id);if(!t)return;
-  t.done=!t.done;t.doneAt=t.done?Date.now():0;
+  t.d=!t.d;t.dAt=t.d?Date.now():0;
   await persistDB();render();
 }
 async function delTask(id){
   db.tasks=db.tasks.filter(x=>x.id!==id);await persistDB();render();
 }
-async function purgeOldDone(){
+async function purgeOldD(){
   const cutoff=Date.now()-30*86400000;
-  db.tasks=db.tasks.filter(t=>!(t.done&&t.doneAt&&t.doneAt<cutoff));
+  db.tasks=db.tasks.filter(t=>!(t.d&&t.dAt&&t.dAt<cutoff));
   await persistDB();render();toast('Tareas completadas antiguas eliminadas','info');
 }
 
@@ -2514,7 +2516,7 @@ function buildProposalHTML(c,bd){
   table{width:100%;border-collapse:collapse;font-size:14px;}
   th{background:#f0f2ff;color:#1020A0;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;padding:10px 12px;text-align:left;}
   td{padding:10px 12px;border-bottom:1px solid #f0f0f0;}
-  tr:last-child td{border-bottom:none;}
+  tr:last-child td{border-bottom:n;}
   .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px;}
   .price-card{border:1px solid #e0e4f0;border-radius:12px;padding:18px;text-align:center;}
   .price-card.rec{border-color:#1020A0;box-shadow:0 0 0 2px rgba(16,32,160,.12);}
@@ -2573,14 +2575,14 @@ function buildProposalHTML(c,bd){
       <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Configuración técnica</h4><p>Instalación de píxeles, CAPI, etiquetas de conversión y herramientas de seguimiento.</p></div></div>
       <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Estrategia y creatividades</h4><p>Planificación de contenido, estructura de campañas y producción de materiales.</p></div></div>
       <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Lanzamiento y testing</h4><p>Activación, pruebas A/B y optimización continua basada en datos reales.</p></div></div>
-      <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Reporting mensual</h4><p>Informe detallado con resultados, conclusiones y próximos pasos.</p></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Reporting mensual</h4><p>Informe detallado con resultados, conclusis y próximos pasos.</p></div></div>
     </div>
   </section>
   <section>
-    <h2>Condiciones</h2>
+    <h2>Condicis</h2>
     <div class="conditions"><ul>
       <li>Sin permanencia — cancelable en cualquier momento con 15 días de preaviso.</li>
-      <li>Primer mes de trabajo enfocado en setup, estrategia y primeras publicaciones / campañas.</li>
+      <li>Primer mes de trabajo enfocado en setup, estrategia y primeras publicacis / campañas.</li>
       <li>Comunicación directa con el equipo de M1 Media vía WhatsApp o email.</li>
       <li>Reunión de revisión mensual incluida en todos los planes.</li>
       <li>Propuesta válida por 15 días desde la fecha de emisión.</li>
@@ -2625,7 +2627,7 @@ function buildInvoiceHTML(c){
   .totals{display:flex;justify-content:flex-end;}
   .totals-box{width:260px;}
   .total-row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;border-bottom:1px solid #f0f0f0;}
-  .total-row.final{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;border-bottom:none;border-top:2px solid #1020A0;padding-top:12px;margin-top:4px;color:#1020A0;}
+  .total-row.final{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;border-bottom:n;border-top:2px solid #1020A0;padding-top:12px;margin-top:4px;color:#1020A0;}
   .note{background:#f8f9ff;border-radius:10px;padding:16px;font-size:13px;color:#555;margin-top:24px;}
   .footer{border-top:1px solid #e8eaf6;padding-top:20px;margin-top:40px;display:flex;justify-content:space-between;align-items:center;}
   .footer-brand{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#1020A0;}
@@ -2691,7 +2693,7 @@ function buildInvoiceHTML(c){
 
 function genProposalFromLead(leadId){
   const l=db.leads.find(x=>x.id===leadId);if(!l)return;
-  const c={name:l.name,service:l.niche,contact:{person:'',email:'',phone:l.phone||''},retainer:l.value||0};
+  const c={name:l.name,service:l.niche,contact:{person:'',email:'',ph:l.ph||''},retainer:l.value||0};
   const win=window.open('','_blank');
   win.document.write(buildProposalHTML(c,{}));
   win.document.close();
@@ -2713,7 +2715,7 @@ function pushNotif(title,body,icon){
 async function sendNotif(title,body){
   pushNotif(title,body);
   toast(title+(body?': '+body:''),'info');
-  // OneSignal push
+ // OneSignal push
   if(typeof OneSignal!=='undefined'){
     try{await OneSignal.User.PushSubscription.optIn();}catch(e){}
   }
@@ -2728,7 +2730,7 @@ function checkMeetingAlerts(){
   const dayAfterKey=dayAfter.toISOString().slice(0,10);
 
   db.clients.forEach(c=>{
-    (c.meetings||[]).filter(m=>!m.done).forEach(m=>{
+    (c.meetings||[]).filter(m=>!m.d).forEach(m=>{
       if(!m.date)return;
       if(m.date===today){
         const key=`meet-today-${m.id}`;
@@ -2762,7 +2764,7 @@ function scheduleLocalNotifications(){
   checkMeetingAlerts();
   setInterval(checkMeetingAlerts,60000);
   // Daily digest at startup
-  const pendingTasks=db.tasks.filter(t=>!t.done&&!t.isAlert&&t.due&&t.due<=dayKey()).length;
+  const pendingTasks=db.tasks.filter(t=>!t.d&&!t.isAlert&&t.due&&t.due<=dayKey()).length;
   if(pendingTasks>0)setTimeout(()=>pushNotif('Tareas pendientes',`Tienes ${pendingTasks} tarea(s) vencida(s) hoy`),3000);
 }
 
@@ -2770,13 +2772,13 @@ function scheduleLocalNotifications(){
 function checkAutomatedNotifications(){
   const pending=db.incomes.filter(i=>i.status==='pending');
   if(pending.length>0)pushNotif('Facturas pendientes',`${pending.length} cobro(s) pendiente(s) de cobrar`);
-  const overdue=db.tasks.filter(t=>!t.done&&!t.isAlert&&t.due&&t.due<dayKey());
+  const overdue=db.tasks.filter(t=>!t.d&&!t.isAlert&&t.due&&t.due<dayKey());
   if(overdue.length>0)pushNotif('Tareas vencidas',`${overdue.length} tarea(s) con fecha pasada`);
   const in7=new Date();in7.setDate(in7.getDate()+7);
   const upcoming=[];
-  db.clients.forEach(c=>(c.meetings||[]).filter(m=>!m.done&&m.date>=dayKey()&&m.date<=in7.toISOString().slice(0,10)).forEach(m=>upcoming.push(m)));
+  db.clients.forEach(c=>(c.meetings||[]).filter(m=>!m.d&&m.date>=dayKey()&&m.date<=in7.toISOString().slice(0,10)).forEach(m=>upcoming.push(m)));
   if(upcoming.length>0&&!sessionStorage.getItem('notif-week')){
-    pushNotif('Reuniones próximas',`${upcoming.length} reunión(es) en los próximos 7 días`);
+    pushNotif('Reunis próximas',`${upcoming.length} reunión(es) en los próximos 7 días`);
     sessionStorage.setItem('notif-week','1');
   }
 }
