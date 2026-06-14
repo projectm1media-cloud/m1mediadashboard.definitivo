@@ -9,7 +9,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://ydblbjsstlaiqqallzqf.supabase.co https://cdn.jsdelivr.net https://cdn.signal.com https://signal.com https://api.signal.com https://wa.me https://calendar.google.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.onesignal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ydblbjsstlaiqqallzqf.supabase.co https://signal.com https://api.signal.com https://cdn.jsdelivr.net wss://ydblbjsstlaiqqallzqf.supabase.co; frame-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://ydblbjsstlaiqqallzqf.supabase.co https://cdn.jsdelivr.net https://cdn.signal.com https://signal.com https://api.signal.com https://wa.me https://calendar.google.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.onesignal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ydblbjsstlaiqqallzqf.supabase.co https://onesignal.com https://api.onesignal.com https://cdn.jsdelivr.net wss://ydblbjsstlaiqqallzqf.supabase.co; frame-src 'none';">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microph=()">
@@ -435,9 +435,9 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
     <div class="auth-s" id="authSub">Accede a tu centro de control</div>
     <div class="auth-err" id="authErr"></div>
     <input class="auth-inp" id="authEmail" type="email" placeholder="Email" autocomplete="email">
-    <input class="auth-inp" id="authPass" type="password" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()">
-    <button class="auth-btn" id="authMainBtn" onclick="doAuth()">Entrar</button>
-    <div class="auth-alt" id="authToggle" onclick="toggleAuthMode()">¿Sin cuenta? <b>Regístrate</b></div>
+   <input class="auth-inp" id="authPass" type="password" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')window.doAuth()">
+<button class="auth-btn" id="authMainBtn" onclick="window.doAuth()">Entrar</button>
+<div class="auth-alt" id="authToggle" onclick="window.toggleAuthMode()">¿Sin cuenta? <b>Regístrate</b></div>
   </div>
 </div>
 
