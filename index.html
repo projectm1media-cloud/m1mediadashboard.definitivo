@@ -1031,6 +1031,7 @@ function toggleSidebar(){$('sidebar').classList.toggle('open');$('mscrim').class
 function closeSidebar(){$('sidebar').classList.remove('open');$('mscrim').classList.remove('show');}
 
 /* ============ MAIN RENDER ============ */
+  const BIND={};
 function render(){
   syncAlertTasks();buildNav();
   const meta=NAV.find(x=>x.t===curTab)||NAV[0];
