@@ -17,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -317,7 +318,7 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
 /* CALENDAR */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
 .cal-head{text-align:center;font-size:10.5px;font-weight:700;color:var(--txt-3);padding:6px 0;text-transform:uppercase;}
-.cal-day{min-height:60px;border-radius:var(--r-sm);padding:6px;cursor:pointer;transition:background .12s;position:relative;}
+.cal-day{min-height:60px;border-radius:var(--r-sm);padding:6px;cursor:pointer;transition:background .12s;position:relative;min-width:0;overflow:hidden;}
 .cal-day:hover{background:var(--bg-2);}
 .cal-today{background:rgba(116,170,255,.15);border:1px solid var(--c-light);}
 .cal-today .cal-num{color:var(--c-light);font-weight:800;}
@@ -479,40 +480,67 @@ label{font-size:11px;font-weight:600;color:var(--txt-2);text-transform:uppercase
   .modal-foot{gap:8px;}
   .pipe-col{min-width:80vw;}
   .prosp-pipe .prosp-col{min-width:75vw;}
-  .prosp-toolbar{flex-direction:column;align-items:stretch;}
+  .prosp-filter-toggle{display:flex;}
+  .prosp-filters{display:none;flex-direction:column;width:100%;}
+  .prosp-filters.open{display:flex;}
+  .prosp-toolbar{flex-direction:column;gap:10px;}
   .prosp-toolbar select{width:100%;font-size:13px;}
-  .prosp-toolbar>div:last-child{display:flex;justify-content:flex-end;}
+  .prosp-stats{display:grid;grid-template-columns:repeat(3,1fr);}
+  .prosp-stat .ps-val{font-size:16px;}
   .auth-box{padding:24px 18px;}
   .price-range-display{grid-template-columns:1fr 1fr 1fr;}
 }
 /* PROSPECTOS */
-.prosp-toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
+.prosp-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 0 14px;}
+.prosp-header h2{font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;}
+.prosp-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.prosp-stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:8px 14px;font-size:11.5px;display:flex;flex-direction:column;gap:2px;}
+.prosp-stat .ps-val{font-family:'Outfit',sans-serif;font-size:19px;font-weight:800;}
+.prosp-stat .ps-lbl{font-size:9.5px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.05em;}
+.prosp-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;}
+.prosp-toolbar select{background:var(--bg-2);border-color:var(--border-soft);border-radius:var(--r-sm);font-size:12px;padding:6px 10px;color:var(--txt);flex:1;min-width:130px;}
+.prosp-filter-toggle{display:none;align-items:center;gap:7px;font-size:13px;font-weight:600;background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:9px 14px;cursor:pointer;color:var(--txt-2);transition:all .15s;width:100%;}
+.prosp-filter-toggle.active{color:var(--c-light);border-color:rgba(116,170,255,.4);}
+.prosp-filter-toggle:hover{color:var(--txt);}
+.prosp-filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;flex:1;}
+.prosp-view-btns{display:flex;gap:5px;flex-shrink:0;}
 .prosp-tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;}
 .prosp-tbl{width:100%;border-collapse:collapse;}
-.prosp-tbl th{text-align:left;font-size:10.5px;font-weight:600;color:var(--txt-3);text-transform:uppercase;letter-spacing:.05em;padding:11px 12px;background:var(--bg-2);border-bottom:1px solid var(--border);}
-.prosp-tbl td{padding:10px 12px;border-bottom:1px solid var(--border-soft);font-size:12.5px;vertical-align:middle;}
+.prosp-tbl th{text-align:left;font-size:10px;font-weight:700;color:var(--txt-3);text-transform:uppercase;letter-spacing:.06em;padding:10px 12px;background:var(--bg-2);border-bottom:1px solid var(--border);}
+.prosp-tbl td{padding:11px 12px;border-bottom:1px solid var(--border-soft);font-size:12.5px;vertical-align:middle;}
 .prosp-tbl tr:last-child td{border-bottom:none;}
-.prosp-tbl tr:hover td{background:rgba(255,255,255,.015);}
+.prosp-tbl tr:hover td{background:rgba(116,170,255,.03);}
 .prosp-tbl .cb-cell{width:34px;}
-.score-pip{display:flex;gap:3px;align-items:center;}
-.score-dot{width:8px;height:8px;border-radius:50%;background:var(--border);}
-.score-dot.on{background:var(--amber);}
-.stage-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;}
-.channel-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px;background:var(--bg-2);border:1px solid var(--border);color:var(--txt-2);white-space:nowrap;}
-.prosp-actions{display:flex;gap:5px;align-items:center;}
-.bulk-bar{background:rgba(116,170,255,.1);border:1px solid rgba(116,170,255,.3);border-radius:var(--r);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:13px;}
+.prosp-store-name{font-weight:700;font-size:13px;color:var(--txt);}
+.prosp-store-domain{display:flex;align-items:center;gap:4px;margin-top:3px;}
+.prosp-store-domain a{font-size:10.5px;color:var(--c-light);text-decoration:none;font-weight:500;}
+.prosp-store-domain a:hover{text-decoration:underline;}
+.score-pip{display:flex;gap:4px;align-items:center;}
+.score-dot{width:9px;height:9px;border-radius:50%;background:var(--border);}
+.score-dot.on.s1{background:#F5C147;}
+.score-dot.on.s2{background:#F2974D;}
+.score-dot.on.s3{background:#3ECF8E;}
+.stage-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.channel-tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;background:rgba(116,170,255,.1);border:1px solid rgba(116,170,255,.2);color:var(--c-light);white-space:nowrap;}
+.prosp-actions{display:flex;gap:4px;align-items:center;}
+.contact-today-btn{background:rgba(62,207,142,.1);border:1px solid rgba(62,207,142,.25);color:var(--green);border-radius:6px;font-size:10px;font-weight:700;padding:3px 7px;cursor:pointer;transition:all .13s;white-space:nowrap;}
+.contact-today-btn:hover{background:rgba(62,207,142,.2);}
+.bulk-bar{background:linear-gradient(135deg,rgba(116,170,255,.08),rgba(40,91,176,.08));border:1px solid rgba(116,170,255,.25);border-radius:var(--r);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:13px;}
 .bulk-bar .bc{font-weight:700;color:var(--c-light);}
-.prosp-pipe{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;-webkit-overflow-scrolling:touch;}
-.prosp-col{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-lg);min-width:190px;flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.prosp-col-head{padding:10px 12px;border-bottom:1px solid var(--border-soft);display:flex;justify-content:space-between;align-items:center;}
+.prosp-pipe{display:flex;gap:12px;overflow-x:auto;padding-bottom:14px;-webkit-overflow-scrolling:touch;}
+.prosp-col{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-lg);min-width:210px;flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.prosp-col-head{padding:11px 13px;border-bottom:1px solid var(--border-soft);display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.02);}
 .prosp-col-name{font-size:11.5px;font-weight:700;display:flex;align-items:center;gap:6px;}
-.prosp-col-count{font-size:10px;color:var(--txt-3);font-weight:600;}
-.prosp-col-body{padding:9px;display:flex;flex-direction:column;gap:7px;flex:1;min-height:50px;}
-.prosp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px;cursor:pointer;transition:transform .12s,box-shadow .12s;border-left:3px solid;}
-.prosp-card:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.2);}
-.prosp-card-name{font-size:12.5px;font-weight:700;margin-bottom:3px;}
-.prosp-card-meta{font-size:10.5px;color:var(--txt-3);}
-.prosp-card-score{display:flex;gap:3px;margin-top:6px;}
+.prosp-col-count{font-size:10px;background:var(--border);color:var(--txt-2);font-weight:700;padding:1px 7px;border-radius:10px;}
+.prosp-col-body{padding:9px;display:flex;flex-direction:column;gap:8px;flex:1;min-height:60px;}
+.prosp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;cursor:pointer;transition:transform .12s,box-shadow .12s,border-color .12s;border-left:3px solid;}
+.prosp-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.22);border-color:#46508a;}
+.prosp-card-name{font-size:13px;font-weight:700;margin-bottom:4px;line-height:1.3;}
+.prosp-card-domain{font-size:10px;color:var(--txt-3);margin-bottom:4px;}
+.prosp-card-meta{font-size:10.5px;color:var(--txt-2);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.prosp-card-rev{color:var(--c-light);font-family:'Outfit',sans-serif;font-weight:700;font-size:11.5px;}
+.prosp-card-score{display:flex;gap:3px;margin-top:8px;align-items:center;}
+.prosp-card-niche{font-size:9.5px;padding:2px 6px;border-radius:5px;background:rgba(116,170,255,.1);color:var(--c-light);font-weight:600;}
 .csv-drop{border:2px dashed var(--border);border-radius:var(--r-lg);padding:28px;text-align:center;cursor:pointer;transition:all .15s;color:var(--txt-3);}
 .csv-drop:hover,.csv-drop.over{border-color:var(--c-light);color:var(--c-light);background:rgba(116,170,255,.04);}
 .csv-preview-tbl{width:100%;border-collapse:collapse;font-size:11px;}
@@ -679,7 +707,25 @@ const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 let currentUser=null;
 const PRESET_COLORS=['#74AAFF','#3ECF8E','#F5C147','#A98BFF','#F47174','#5E72E8','#19C3D6','#E86AB5','#7BC74D','#F2974D'];
 const STATUS={active:{t:'Activo',c:'active'},paused:{t:'Pausado',c:'paused'},percent:{t:'A porcentaje',c:'percent'},archived:{t:'Ex-cliente',c:'archived'}};
-const SERVICE={ads:'Meta Ads / Publicidad',social:'Gestión de redes sociales',web:'Web / SEO',full:'Gestión completa'};
+const SERVICE={
+  ads:'Meta Ads / Publicidad',growth:'Growth Partner (Fee+%)',
+  social:'Gestión de RRSS',seo:'SEO / Posicionamiento',
+  content:'Creación de contenido',video:'Vídeo / Reels',
+  full:'Gestión completa',otro:'Otro',
+  /* legacy string values (backwards compat) */
+  'Meta Ads':'Meta Ads / Publicidad','Gestión RRSS':'Gestión de RRSS',
+  'Contenido Orgánico':'Creación de contenido','SEO':'SEO / Posicionamiento',
+  'Diseño Web':'Diseño Web','Automatizacis':'Automatizaciones',
+  'Branding':'Branding','Vídeo/Reels':'Vídeo / Reels',
+  'Email Marketing':'Email Marketing','Otro':'Otro',
+  'Gestión completa':'Gestión completa'
+};
+const METRIC_KEY={
+  'Meta Ads':'ads','Gestión RRSS':'social','Contenido Orgánico':'social',
+  'SEO':'web','Diseño Web':'web','Automatizacis':'full','Branding':'full',
+  'Vídeo/Reels':'social','Email Marketing':'social','Otro':'full',
+  growth:'ads',seo:'web',content:'social',video:'social',full:'full',otro:'full'
+};
 const STAGES=['Nuevo lead','Contactado','Reunión','Propuesta','Negociación','Ganado','Perdido'];
 const STAGE_COL={'Nuevo lead':'#74AAFF','Contactado':'#5E72E8','Reunión':'#A98BFF','Propuesta':'#F5C147','Negociación':'#F2974D','Ganado':'#3ECF8E','Perdido':'#F47174'};
 const LEVELS=[
@@ -738,27 +784,40 @@ const METRICS={
     {k:'reach',n:'Alcance',u:'',hi:true,th:[3000,10000,25000,60000]},
     {k:'ctr',n:'CTR',u:'%',hi:true,th:[0.8,1.2,1.8,2.5]},
     {k:'foll',n:'Seguidores nuevos',u:'',hi:true,th:[20,60,140,300]}
+  ],
+  growth:[
+    {k:'roas',n:'ROAS',u:'x',hi:true,th:[1.5,2.5,3.5,5]},
+    {k:'spend',n:'Inversión publicitaria',u:'€',hi:true,th:[0,0,0,0],raw:true},
+    {k:'revenue',n:'Ingresos generados',u:'€',hi:true,th:[0,0,0,0],raw:true},
+    {k:'cpl',n:'Coste por lead',u:'€',hi:false,th:[5,10,20,35]},
+    {k:'cpc',n:'Coste por clic',u:'€',hi:false,th:[0.3,0.6,1,2]},
+    {k:'ctr',n:'CTR',u:'%',hi:true,th:[0.8,1.2,1.8,2.5]},
+    {k:'conv',n:'Conversiones',u:'',hi:true,th:[5,15,30,60]},
+    {k:'convrate',n:'Tasa de conversión',u:'%',hi:true,th:[1,2.5,4,7]},
+    {k:'reach',n:'Alcance',u:'',hi:true,th:[2000,8000,20000,50000]}
   ]
 };
 
-/* Catálogo de servicios con nuevos precios por segmento */
+/* Catálogo de servicios — marketing digital M1 Media */
 const SVC_CATALOG=[
-  {k:'social',n:'Gestión de redes sociales',sub:'Planificación, copy, publicación y comunidad',
-    local:{min:400,max:600},pyme:{min:700,max:950},premium:{min:1200,max:1800},base:500,note:'Con grabación + edición presencial: +200–400€'},
-  {k:'ads',n:'Gestión de Meta Ads',sub:'Estrategia, creatividades, optimización y reporting',
-    local:{min:300,max:450},pyme:{min:500,max:800},premium:{min:900,max:1500},base:380,note:'Fee de gestión + 10–15% sobre inversión publicitaria (mín. 500€)'},
-  {k:'web',n:'Diseño web',sub:'Landing, web corporativa o tienda online',
-    local:{min:600,max:900},pyme:{min:1200,max:2500},premium:{min:3000,max:6000},base:800,note:'Mantenimiento mensual opcional: 80–200€/mes',once:true},
-  {k:'seo',n:'Posicionamiento SEO',sub:'On-page, técnico, contenidos y link building',
-    local:{min:300,max:450},pyme:{min:500,max:800},premium:{min:900,max:1500},base:380,note:'Mínimo 3–6 meses para ver resultados reales'},
-  {k:'content',n:'Creación de contenido',sub:'Carruseles, stories, reels y gráficas',
-    local:{min:250,max:400},pyme:{min:450,max:700},premium:{min:800,max:1200},base:300,note:'Normalmente se vende junto con gestión de RRSS'},
-  {k:'auto',n:'Automatizacis (n8n / chatbots)',sub:'Flujos automatizados, agentes IA y bots',
-    local:{min:400,max:700},pyme:{min:800,max:1500},premium:{min:2000,max:5000},base:500,note:'Mantenimiento: 100–300€/mes según complejidad',once:true},
-  {k:'branding',n:'Branding e identidad visual',sub:'Logo, paleta, tipografía y manual de marca',
-    local:{min:500,max:800},pyme:{min:900,max:1800},premium:{min:2500,max:5000},base:700,note:'Sin manual: rango inferior. Con guía+aplicacis: rango superior',once:true},
-  {k:'video',n:'Edición de vídeo / reels',sub:'Montaje, subtítulos, color y música',
-    local:{min:50,max:80},pyme:{min:200,max:400},premium:{min:500,max:900},base:65,note:'Con grabación presencial incluida: +150–300€/visita',perUnit:true,pmyeNote:'8–12 vídeos/mes',premiumNote:'producción alta'}
+  {k:'growth',n:'Growth Partner',sub:'Fee fijo mensual + % sobre inversión publicitaria',icon:'🚀',
+    local:{min:400,max:600},pyme:{min:600,max:900},premium:{min:900,max:1500},base:600,
+    note:'+ 10–15% sobre inversión publicitaria mensual',growth:true},
+  {k:'ads',n:'Gestión de Meta Ads',sub:'Estrategia, creatividades, optimización y reporting',icon:'📣',
+    local:{min:300,max:450},pyme:{min:500,max:800},premium:{min:900,max:1500},base:380,
+    note:'Fee de gestión (inversión publicitaria aparte, mín. 500€)'},
+  {k:'social',n:'Gestión de RRSS',sub:'Planificación, copy, publicación y comunidad',icon:'📲',
+    local:{min:400,max:600},pyme:{min:700,max:950},premium:{min:1200,max:1800},base:500,
+    note:'Con grabación + edición presencial: +200–400€'},
+  {k:'content',n:'Creación de contenido',sub:'Carruseles, stories, reels y gráficas',icon:'🎨',
+    local:{min:250,max:400},pyme:{min:450,max:700},premium:{min:800,max:1200},base:300,
+    note:'Normalmente se combina con gestión de RRSS'},
+  {k:'seo',n:'Posicionamiento SEO',sub:'On-page, técnico, contenidos y link building',icon:'🔍',
+    local:{min:300,max:450},pyme:{min:500,max:800},premium:{min:900,max:1500},base:380,
+    note:'Mínimo 3–6 meses para ver resultados reales'},
+  {k:'video',n:'Edición de vídeo / reels',sub:'Montaje, subtítulos, color y música',icon:'🎬',
+    local:{min:50,max:80},pyme:{min:200,max:400},premium:{min:500,max:900},base:65,
+    note:'Con grabación presencial: +150–300€/visita',perUnit:true}
 ];
 
 const NICHES=[
@@ -787,6 +846,7 @@ let budgetState={clientId:0,niche:'local',margin:35,services:{},segment:'pyme'};
 let crmViewMode='pipeline', crmViewMonth=null;
 let objPeriod='monthly';
 let budSvcFilter='all';
+let budGpPct=12;
 
 /* ——— PROSPECTOS state ——— */
 const PROSP_STAGES=[
@@ -805,6 +865,7 @@ let prospView='table';
 let prospSelected=new Set();
 let _prosp=null;
 let _prospLoading=false;
+let _prospFilterOpen=false;
 
 /* ============ STORAGE ============ */
 async function loadDB(){
@@ -1028,7 +1089,8 @@ function clientHealth(c){
   const months=[...new Set(c.metricLog.map(l=>l.month))].sort();
   const lastM=months[months.length-1];
   const last=c.metricLog.filter(l=>l.month===lastM);
-  const defs=METRICS[c.service]||[];
+  const metKey=METRIC_KEY[c.service]||c.service;
+  const defs=METRICS[metKey]||[];
   let sum=0,n=0;
   last.forEach(entry=>defs.forEach(m=>{
     if(m.raw)return;
@@ -1160,7 +1222,7 @@ function tickDate(){
 /* ============ NAV ============ */
 const NAV=[
   {t:'dashboard',n:'Dashboard',i:'dashboard',sub:'Visión global de la agencia'},
-  {t:'crm',n:'CRM Comercial',i:'target',sub:'Ventas y pipeline'},
+  {t:'prospectos',n:'Prospectos Ecom',i:'briefcase',sub:'Pipeline de captación ecommerce'},
   {t:'clientes',n:'Clientes',i:'users',sub:'Fichas, métricas y health score'},
   {t:'objetivos',n:'Objetivos',i:'goal',sub:'Metas mensuales, trimestrales y anuales'},
   {t:'presupuestos',n:'Presupuestos',i:'calc',sub:'Calcula precios y genera propuestas'},
@@ -1170,7 +1232,6 @@ const NAV=[
   {t:'tareas',n:'Tareas',i:'check',sub:'Organización y alertas'},
   {t:'notas',n:'Notas',i:'fileText',sub:'Apuntes rápidos por día'},
   {t:'trabajadores',n:'Trabajadores',i:'workers',sub:'Panel del equipo'},
-  {t:'prospectos',n:'Prospectos Ecom',i:'briefcase',sub:'Pipeline de captación ecommerce'},
 ];
 function buildNav(){
   $('navWrap').innerHTML=NAV.map(x=>`
@@ -1537,7 +1598,7 @@ function clientCardHtml(c){
     <div class="bar" style="background:${c.color}"></div>
     <div class="top"><div class="cdot" style="background:${c.color}">${initials(c.name)}</div><span class="tag ${st.c}">${st.t}</span></div>
     <div class="cname" style="color:${c.color}" onclick="openClientDetail(${c.id})">${esc(c.name)}</div>
-    <div class="ctype">${SERVICE[c.service]}</div>
+    <div class="ctype">${SERVICE[c.service]||c.service||'Sin servicio'}${c.service==='growth'&&c.gp_pct?`<span style="color:var(--amber);font-size:10px;margin-left:6px">+${c.gp_pct}% inv.</span>`:''}</div>
     <div class="health-row">${healthRing(h)}
       <div class="health-info"><div class="hl">Health Score</div><div class="hv" style="color:${hl.c}">${hl.t}</div></div>
     </div>
@@ -1608,7 +1669,7 @@ function viewClientDetail(){
       <div class="cdot" style="background:${c.color}">${initials(c.name)}</div>
       <div style="flex:1;min-width:160px">
         <div class="cd-name" style="color:${c.color}">${esc(c.name)}</div>
-        <div class="cd-meta">${SERVICE[c.service]} · <span class="tag ${st.c}">${st.t}</span></div>
+        <div class="cd-meta">${SERVICE[c.service]||c.service||'Sin servicio'}${c.service==='growth'&&c.gp_pct?` · <span style="color:var(--amber)">+${c.gp_pct}% inversión</span>`:''} · <span class="tag ${st.c}">${st.t}</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:11px">${healthRing(h,58)}
         <div><div class="hl" style="font-size:10px;color:var(--txt-3);text-transform:uppercase">Health Score</div>
@@ -1862,12 +1923,13 @@ function viewPresupuestos(){
   const leadsAbiertos=(db.leads||[]).filter(l=>!['Ganado','Perdido'].includes(l.stage));
   const opts='<option value="0">— Sin asociar / nuevo —</option>'
     +'<optgroup label="Clientes">'+db.clients.map(c=>`<option value="c${c.id}" ${budgetState.clientId==='c'+c.id?'selected':''}>${esc(c.name)}</option>`).join('')+'</optgroup>'
-    +(leadsAbiertos.length?'<optgroup label="Leads del CRM">'+leadsAbiertos.map(l=>`<option value="l${l.id}" ${budgetState.clientId==='l'+l.id?'selected':''}>${esc(l.name)} · ${l.stage}</option>`).join('')+'</optgroup>':'');
+    +(leadsAbiertos.length?'<optgroup label="Leads">'+leadsAbiertos.map(l=>`<option value="l${l.id}" ${budgetState.clientId==='l'+l.id?'selected':''}>${esc(l.name)} · ${l.stage}</option>`).join('')+'</optgroup>':'');
   const seg=budgetState.segment||'pyme';
-  
-  const filteredSvc=budSvcFilter==='all'?SVC_CATALOG:SVC_CATALOG.filter(s=>!s.once&&budSvcFilter==='monthly'||s.once&&budSvcFilter==='once'||budSvcFilter==='all');
-  
+  const segColors={local:['var(--c-light)','rgba(116,170,255,.1)','rgba(116,170,255,.3)'],pyme:['var(--purple)','rgba(169,139,255,.1)','rgba(169,139,255,.3)'],premium:['var(--green)','rgba(62,207,142,.1)','rgba(62,207,142,.3)']};
+  const [segC,segBg,segBd]=segColors[seg]||segColors.pyme;
+
   let base=0,baseMin=0,baseMax=0;
+  let hasGrowth=false,gpPctForCalc=budGpPct;
   SVC_CATALOG.forEach(s=>{
     const st=budgetState.services[s.k];
     if(st&&st.on){
@@ -1875,64 +1937,103 @@ function viewPresupuestos(){
       base+=price;
       baseMin+=s[seg]?s[seg].min:s.base*0.9;
       baseMax+=s[seg]?s[seg].max:s.base*1.1;
+      if(s.growth)hasGrowth=true;
     }
   });
   const niche=NICHES.find(n=>n.k===budgetState.niche)||NICHES[0];
   const adjusted=base*niche.m,adjMin=baseMin*niche.m,adjMax=baseMax*niche.m;
   const margin=budgetState.margin;
   const final=adjusted*(1+margin/100),finalMin=adjMin*(1+margin/100),finalMax=adjMax*(1+margin/100);
+  const selectedCount=SVC_CATALOG.filter(s=>budgetState.services[s.k]&&budgetState.services[s.k].on).length;
 
   return `
-    <div class="row-head" style="margin-top:10px"><h2>Calculadora de presupuestos</h2><span class="meta">Precios 2026</span></div>
-    <div class="bud-grid">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:10px 0 18px;flex-wrap:wrap;gap:10px">
       <div>
-        <div class="panel" style="margin-bottom:14px">
+        <h2 style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800">Calculadora de precios</h2>
+        <div style="font-size:12px;color:var(--txt-3);margin-top:3px">Servicios de marketing digital · Precios 2026</div>
+      </div>
+      <span style="background:${segBg};border:1px solid ${segBd};border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;color:${segC}">${seg==='local'?'Negocio local':seg==='pyme'?'PYME mediana':'Empresa / Premium'}</span>
+    </div>
+    <div class="bud-grid">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <!-- Contexto del cliente -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px">
+          <div style="font-size:11px;font-weight:700;color:var(--txt-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Contexto</div>
           <div class="split" style="margin-bottom:12px">
             <div class="field"><label>Cliente / lead</label><select id="bud-client" onchange="budSetClient(this.value)">${opts}</select></div>
-            <div class="field"><label>Sector / nicho</label><select id="bud-niche" onchange="budSetNiche(this.value)">${NICHES.map(n=>`<option value="${n.k}" ${budgetState.niche===n.k?'selected':''}>${n.n} (×${n.m})</option>`).join('')}</select></div>
+            <div class="field"><label>Sector</label><select id="bud-niche" onchange="budSetNiche(this.value)">${NICHES.map(n=>`<option value="${n.k}" ${budgetState.niche===n.k?'selected':''}>${n.n} (×${n.m})</option>`).join('')}</select></div>
           </div>
-          <div class="field"><label>Segmento de cliente</label>
-            <div style="display:flex;gap:6px;margin-top:4px">
-              ${[['local','Negocio local'],['pyme','PYME mediana'],['premium','Empresa / Premium']].map(([k,n])=>`
-                <button class="svc-filter-tab${seg===k?' on':''}" onclick="budgetState.segment='${k}';render()">${n}</button>`).join('')}
+          <div class="field"><label>Segmento</label>
+            <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+              ${[['local','🏪 Negocio local'],['pyme','🏢 PYME mediana'],['premium','🚀 Empresa / Premium']].map(([k,n])=>`
+                <button style="background:${seg===k?segBg:'var(--bg-2)'};border:1px solid ${seg===k?segBd:'var(--border)'};color:${seg===k?segC:'var(--txt-2)'};border-radius:var(--r-sm);padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .14s;flex:1;min-width:100px" onclick="budgetState.segment='${k}';render()">${n}</button>`).join('')}
             </div>
           </div>
         </div>
-        <div class="panel">
-          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:12px">Servicios</div>
-          <div class="svc-filter-tabs">
-            ${[['all','Todos'],['monthly','Mensuales'],['once','Únicos']].map(([k,n])=>`
-              <div class="svc-filter-tab${budSvcFilter===k?' on':''}" onclick="budSvcFilter='${k}';render()">${n}</div>`).join('')}
+
+        <!-- Servicios -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:15px">Servicios</div>
+            ${selectedCount>0?`<span style="background:rgba(116,170,255,.12);border:1px solid rgba(116,170,255,.25);border-radius:20px;padding:2px 10px;font-size:10.5px;font-weight:700;color:var(--c-light)">${selectedCount} seleccionado(s)</span>`:''}
           </div>
-          ${SVC_CATALOG.filter(s=>budSvcFilter==='all'||(budSvcFilter==='once'?s.once:!s.once)).map(s=>{
+          <div style="display:flex;flex-direction:column;gap:10px">
+          ${SVC_CATALOG.map(s=>{
             const st=budgetState.services[s.k]||{};
             const pr=s[seg]||(s.base?{min:Math.round(s.base*0.9),max:Math.round(s.base*1.1)}:{min:s.base,max:s.base});
             const defPrice=st.price!=null?st.price:Math.round((pr.min+pr.max)/2);
-            return `<div class="svc-row">
-              <div class="svc-check ${st.on?'on':''}" onclick="budToggle('${s.k}')">${st.on?svg('checks',13):''}</div>
-              <div style="flex:1">
-                <div class="sr-name">${s.n}</div>
-                <div class="sr-sub">${esc(s.sub||'')}</div>
-                ${s.note?`<div style="font-size:9.5px;color:var(--amber);margin-top:2px">${esc(s.note)}</div>`:''}
-              </div>
-              <div class="svc-price-col">
-                <input type="number" value="${defPrice}" onchange="budPrice('${s.k}',this.value)" ${st.on?'':'disabled'}>
-                <div style="font-size:9px;color:var(--txt-3);text-align:right">${pr.min}–${pr.max}€${s.once?'/única':s.perUnit?'/ud':'</div>'}</div>
+            const isOn=!!st.on;
+            return `<div style="background:${isOn?'rgba(116,170,255,.06)':'var(--bg-2)'};border:1.5px solid ${isOn?'rgba(116,170,255,.35)':'var(--border)'};border-radius:var(--r);padding:13px 14px;cursor:pointer;transition:all .15s" onclick="budToggle('${s.k}')">
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <div style="width:22px;height:22px;border-radius:6px;border:2px solid ${isOn?'var(--c-light)':'var(--border)'};background:${isOn?'var(--c-light)':'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s">
+                  ${isOn?`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0d1024" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+                </div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px">
+                    <span>${s.icon||'📦'} ${s.n}</span>
+                    ${s.growth?`<span style="background:rgba(245,193,71,.15);border:1px solid rgba(245,193,71,.3);color:var(--amber);font-size:9px;font-weight:800;padding:1px 7px;border-radius:10px;white-space:nowrap">Growth Partner</span>`:''}
+                    ${s.once?`<span style="background:rgba(169,139,255,.12);color:var(--purple);font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px">Único</span>`:''}
+                  </div>
+                  <div style="font-size:11.5px;color:var(--txt-3);margin-top:3px">${esc(s.sub||'')}</div>
+                  ${s.note?`<div style="font-size:10px;color:var(--amber);margin-top:4px">ⓘ ${esc(s.note)}</div>`:''}
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0" onclick="event.stopPropagation()">
+                  <input type="number" value="${defPrice}" onchange="budPrice('${s.k}',this.value)" ${isOn?'':'disabled'} style="width:90px;text-align:right;font-weight:700;font-size:13px;padding:6px 9px;border-color:${isOn?'rgba(116,170,255,.4)':'var(--border)'}">
+                  <div style="font-size:9.5px;color:var(--txt-3);text-align:right">${pr.min}–${pr.max}€${s.once?'/única':s.perUnit?'/ud/mes':'/mes'}</div>
+                  ${s.growth&&isOn?`<div style="display:flex;align-items:center;gap:5px;margin-top:2px">
+                    <input type="number" value="${budGpPct}" min="5" max="30" onchange="budGpPct=+this.value;render()" style="width:56px;text-align:right;font-size:12px;padding:4px 7px">
+                    <span style="font-size:11px;color:var(--txt-2)">% inversión</span>
+                  </div>`:''}
+                </div>
               </div>
             </div>`;
           }).join('')}
+          </div>
         </div>
       </div>
+
+      <!-- RESUMEN -->
       <div class="bud-summary">
-        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:16px;margin-bottom:14px">Resumen del presupuesto</div>
-        <div style="display:inline-flex;align-items:center;gap:5px;background:${seg==='local'?'rgba(116,170,255,.1)':seg==='pyme'?'rgba(169,139,255,.1)':'rgba(62,207,142,.1)'};border:1px solid ${seg==='local'?'rgba(116,170,255,.3)':seg==='pyme'?'rgba(169,139,255,.3)':'rgba(62,207,142,.3)'};border-radius:20px;padding:3px 10px;font-size:10.5px;font-weight:700;color:${seg==='local'?'var(--c-light)':seg==='pyme'?'var(--purple)':'var(--green)'};margin-bottom:14px">
-          ${seg==='local'?'Negocio local':seg==='pyme'?'PYME mediana':'Empresa / Premium'}
+        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:17px;margin-bottom:6px">Resumen</div>
+        <div style="font-size:11px;color:var(--txt-3);margin-bottom:16px">Propuesta para cliente ${seg==='local'?'local':seg==='pyme'?'PYME':'Premium'}</div>
+
+        ${selectedCount===0?`<div style="text-align:center;padding:24px 0;color:var(--txt-3);font-size:13px">Selecciona servicios para calcular el precio</div>`:`
+        <div style="display:flex;flex-direction:column;gap:0">
+          ${SVC_CATALOG.filter(s=>budgetState.services[s.k]&&budgetState.services[s.k].on).map(s=>{
+            const st=budgetState.services[s.k];
+            const price=st.price!=null?st.price:(s[seg]?(s[seg].min+s[seg].max)/2:s.base);
+            return`<div class="bud-line">
+              <span style="display:flex;align-items:center;gap:6px">${s.icon||'📦'} ${s.n}${s.growth?` <span style="font-size:9px;color:var(--txt-3)">+${budGpPct}% inv.</span>`:''}</span>
+              <span class="bl-v">${eur(price)}</span>
+            </div>`;
+          }).join('')}
         </div>
-        <div class="bud-line"><span>Suma de servicios</span><span class="bl-v">${eur(base)}</span></div>
-        <div class="bud-line"><span>Ajuste por sector (×${niche.m})</span><span class="bl-v">${eur(adjusted)}</span></div>
-        <div class="bud-line"><span>Margen de beneficio</span><span class="bl-v" style="color:var(--green)">+${margin}%</span></div>
-        <div style="margin:14px 0 4px">
-          <label>Tu margen: ${margin}%</label>
+        <div style="border-top:1px solid var(--border);margin:8px 0"></div>
+        <div class="bud-line"><span>Base</span><span class="bl-v">${eur(base)}</span></div>
+        ${niche.m!==1?`<div class="bud-line"><span>Ajuste sector ×${niche.m}</span><span class="bl-v">${eur(adjusted)}</span></div>`:''}
+        <div class="bud-line"><span>Margen</span><span class="bl-v" style="color:var(--green)">+${margin}%</span></div>
+        <div style="margin:12px 0 8px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--txt-3);margin-bottom:6px"><span>Margen: ${margin}%</span><span>${eur(final-adjusted)} beneficio</span></div>
           <input type="range" class="slider" min="0" max="120" value="${margin}" oninput="budMargin(this.value)">
         </div>
         <div class="price-range-display">
@@ -1940,10 +2041,16 @@ function viewPresupuestos(){
           <div class="prd-item highlight"><div class="prd-label">Recomendado</div><div class="prd-val">${eur(final)}</div></div>
           <div class="prd-item"><div class="prd-label">Máximo</div><div class="prd-val">${eur(finalMax)}</div></div>
         </div>
-        <div class="bud-line total"><span>Precio final</span><span style="color:var(--c-light)">${eur(final)}</span></div>
-        <div class="mini" style="margin:8px 0 14px">Beneficio estimado: ${eur(final-adjusted)} / mes</div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:8px" onclick="genProposalFromBudget()">${ic('fileText',15)}Generar propuesta</button>
-        <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="applyBudgetToClient()">${ic('save',15)}Guardar como retainer</button>
+        <div class="bud-line total" style="margin-top:4px"><span>Total/mes</span><span style="color:var(--c-light)">${eur(final)}</span></div>
+        ${hasGrowth?`<div style="background:rgba(245,193,71,.08);border:1px solid rgba(245,193,71,.2);border-radius:var(--r-sm);padding:10px 12px;margin:10px 0;font-size:11.5px;color:var(--amber)">
+          <div style="font-weight:700;margin-bottom:3px">+ Variable Growth Partner</div>
+          ${budGpPct}% sobre inversión publicitaria del cliente
+        </div>`:''}
+        `}
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="genProposalFromBudget()">${ic('fileText',15)}Generar propuesta</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="applyBudgetToClient()">${ic('save',15)}Guardar como retainer</button>
+        </div>
       </div>
     </div>`;
 }
@@ -2532,7 +2639,18 @@ async function delLead(id){
 function openClientModal(id){
   const c=id?db.clients.find(x=>x.id===id):null;
   pickedColor=c?c.color:PRESET_COLORS[db.clients.length%PRESET_COLORS.length];
-  const SERVICES=['Meta Ads','Gestión RRSS','Contenido Orgánico','SEO','Diseño Web','Automatizacis','Branding','Vídeo/Reels','Email Marketing','Otro'];
+  const SERVICES_OPT=[
+    {v:'ads',n:'Meta Ads / Publicidad'},
+    {v:'growth',n:'🚀 Growth Partner (Fee + %)'},
+    {v:'social',n:'Gestión de RRSS'},
+    {v:'content',n:'Creación de contenido'},
+    {v:'seo',n:'SEO / Posicionamiento'},
+    {v:'video',n:'Vídeo / Reels'},
+    {v:'full',n:'Gestión completa'},
+    {v:'otro',n:'Otro'}
+  ];
+  const curSvc=c?c.service:'ads';
+  const isGP=curSvc==='growth';
   modal(`<div class="modal wide">
     <h3>${ic('user',18)}${id?'Editar cliente':'Nuevo cliente'}</h3>
     <div class="form-grid">
@@ -2540,9 +2658,17 @@ function openClientModal(id){
         <div class="field"><label>Nombre / empresa</label><input id="clName" value="${c?esc(c.name):''}" placeholder="Empresa S.L."></div>
         <div class="field"><label>Retainer mensual (€)</label><input id="clRet" type="number" value="${c?c.retainer||'':''}" placeholder="0"></div>
       </div>
-      <div class="field"><label>Servicio(s)</label><select id="clSvc">
-        ${SERVICES.map(s=>`<option ${c&&c.service===s?'selected':''}>${s}</option>`).join('')}
+      <div class="field"><label>Tipo de servicio</label><select id="clSvc" onchange="onClientSvcChange(this.value)">
+        ${SERVICES_OPT.map(s=>`<option value="${s.v}" ${curSvc===s.v?'selected':''}>${s.n}</option>`).join('')}
       </select></div>
+      <div id="gpBox" style="display:${isGP?'':'none'};background:rgba(245,193,71,.06);border:1px solid rgba(245,193,71,.25);border-radius:var(--r);padding:13px">
+        <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:10px">🚀 Modelo Growth Partner</div>
+        <div class="split">
+          <div class="field"><label>Fee fijo mensual (€)</label><input id="clGpFixed" type="number" value="${c&&c.gp_fixed||''}" placeholder="600"></div>
+          <div class="field"><label>% sobre inversión pub.</label><input id="clGpPct" type="number" value="${c&&c.gp_pct||12}" min="5" max="30" placeholder="12"></div>
+        </div>
+        <div style="font-size:10.5px;color:var(--txt-3);margin-top:5px">El retainer de arriba = fee fijo mensual. El % aplica sobre la inversión pub. del cliente.</div>
+      </div>
       <div class="split">
         <div class="field"><label>Persona de contacto</label><input id="clPerson" value="${c&&c.contact?esc(c.contact.person||''):''}" placeholder="Nombre Apellido"></div>
         <div class="field"><label>Email</label><input id="clEmail" type="email" value="${c&&c.contact?esc(c.contact.email||''):''}" placeholder="email@..."></div>
@@ -2560,9 +2686,12 @@ function openClientModal(id){
     </div>
   </div>`);
 }
+function onClientSvcChange(val){const b=document.getElementById('gpBox');if(b)b.style.display=val==='growth'?'':'none';}
 async function saveClient(id){
   const name=$('clName').value.trim();if(!name){alert('Indica nombre');return;}
-  const data={name,retainer:parseFloat($('clRet').value)||0,service:$('clSvc').value,
+  const svc=$('clSvc').value;
+  const gpData=svc==='growth'?{gp_fixed:parseFloat($('clGpFixed')?$('clGpFixed').value:0)||0,gp_pct:parseFloat($('clGpPct')?$('clGpPct').value:12)||12}:{};
+  const data={name,retainer:parseFloat($('clRet').value)||0,service:svc,...gpData,
     contact:{person:$('clPerson').value.trim(),email:$('clEmail').value.trim(),ph:$('clPh').value.trim()},
     startDate:$('clStart').value||dayKey(),notes:$('clNotes').value.trim(),color:pickedColor,status:'active'};
   if(id&&id!=='null'){
@@ -3364,6 +3493,12 @@ function scoreHtml(p){
   return`<div class="score-pip">${[0,1,2].map(i=>`<div class="score-dot${i<s?' on':''}"></div>`).join('')}<span style="font-size:10px;color:var(--txt-3);margin-left:3px">${s}/3</span></div>`;
 }
 
+function scoreHtmlV2(p){
+  const s=calcProspScore(p);
+  const colors=['var(--border)','#F5C147','#F2974D','#3ECF8E'];
+  const dots=[0,1,2].map(i=>`<div class="score-dot${i<s?' on s'+s:''}"></div>`).join('');
+  return`<div class="score-pip">${dots}<span style="font-size:9.5px;color:${s===0?'var(--txt-3)':colors[s]};margin-left:4px;font-weight:700">${s}/3</span></div>`;
+}
 function viewProspectos(){
   if(_prosp===null){
     if(!_prospLoading)loadProsp();
@@ -3373,26 +3508,45 @@ function viewProspectos(){
   const total=_prosp.filter(p=>p.stage!=='Archivado').length;
   const totalAll=_prosp.length;
   const partners=_prosp.filter(p=>p.stage==='Cerrado Partner').length;
+  const secuencia=_prosp.filter(p=>p.stage==='Secuencia activa').length;
+  const score3=_prosp.filter(p=>calcProspScore(p)===3).length;
 
   const stageOpts=`<option value="all">Todas las etapas</option>${PROSP_STAGES.map(s=>`<option value="${esc(s.k)}"${prospFilter.stage===s.k?' selected':''}>${esc(s.k)}</option>`).join('')}`;
-  const scoreOpts=`<option value="all">Cualquier score</option>${[0,1,2,3].map(n=>`<option value="${n}"${prospFilter.score===String(n)?' selected':''}>${n}/3 puntos</option>`).join('')}`;
+  const scoreOpts=`<option value="all">Cualquier score</option>${[0,1,2,3].map(n=>`<option value="${n}"${prospFilter.score===String(n)?' selected':''}>${n}/3 pts</option>`).join('')}`;
   const nicheOpts=`<option value="">Todos los nichos</option>${PROSP_NICHES.map(n=>`<option value="${esc(n)}"${prospFilter.niche===n?' selected':''}>${esc(n)}</option>`).join('')}`;
 
+  const filterBtnLabel=_prospFilterOpen?'▲ Filtros':'▼ Filtros';
   const header=`
-    <div class="row-head" style="margin-top:10px">
-      <div><h2>Pipeline Ecommerce</h2><div class="mini" style="margin-top:3px">${total} activos · ${partners} partners cerrados · ${totalAll} total</div></div>
+    <div class="prosp-header">
+      <div>
+        <h2 style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800">Pipeline Ecommerce</h2>
+        <div style="font-size:12px;color:var(--txt-3);margin-top:3px">${total} activos · ${totalAll} total</div>
+      </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <button class="btn btn-ghost btn-sm" onclick="openCSVImport()">${ic('inbox',15)}Importar CSV</button>
-        <button class="btn btn-primary btn-sm" onclick="openProspModal(null)">${ic('plus',15)}Añadir prospecto</button>
+        <button class="btn btn-ghost btn-sm" onclick="openCSVImport()">${ic('inbox',15)}Importar</button>
+        <button class="btn btn-primary btn-sm" onclick="openProspModal(null)">${ic('plus',15)}Añadir</button>
       </div>
     </div>
+    <div class="prosp-stats">
+      <div class="prosp-stat"><div class="ps-val">${total}</div><div class="ps-lbl">Activos</div></div>
+      <div class="prosp-stat"><div class="ps-val" style="color:var(--amber)">${secuencia}</div><div class="ps-lbl">En secuencia</div></div>
+      <div class="prosp-stat"><div class="ps-val" style="color:var(--green)">${partners}</div><div class="ps-lbl">Partners</div></div>
+      <div class="prosp-stat"><div class="ps-val" style="color:var(--c-light)">${score3}</div><div class="ps-lbl">Score máximo</div></div>
+    </div>
     <div class="prosp-toolbar">
-      <select style="width:auto;font-size:12px;padding:6px 10px" onchange="prospFilter.stage=this.value;prospSelected.clear();render()">${stageOpts}</select>
-      <select style="width:auto;font-size:12px;padding:6px 10px" onchange="prospFilter.score=this.value;prospSelected.clear();render()">${scoreOpts}</select>
-      <select style="width:auto;font-size:12px;padding:6px 10px" onchange="prospFilter.niche=this.value;prospSelected.clear();render()">${nicheOpts}</select>
-      <div style="margin-left:auto;display:flex;gap:6px">
-        <button class="btn btn-ghost btn-sm${prospView==='table'?' btn-primary':''}" onclick="prospView='table';render()">${ic('fileText',14)} Tabla</button>
-        <button class="btn btn-ghost btn-sm${prospView==='kanban'?' btn-primary':''}" onclick="prospView='kanban';render()">${ic('arrows',14)} Kanban</button>
+      <div class="prosp-filter-toggle${_prospFilterOpen?' active':''}" onclick="_prospFilterOpen=!_prospFilterOpen;render()">
+        ${ic('filter',15)} ${filterBtnLabel}
+        ${prospFilter.stage!=='all'||prospFilter.score!=='all'||prospFilter.niche?'<span style="background:var(--c-light);color:var(--bg);font-size:9px;font-weight:800;padding:1px 6px;border-radius:10px;margin-left:4px">Activos</span>':''}
+      </div>
+      <div class="prosp-filters${_prospFilterOpen?' open':''}">
+        <select onchange="prospFilter.stage=this.value;prospSelected.clear();render()">${stageOpts}</select>
+        <select onchange="prospFilter.score=this.value;prospSelected.clear();render()">${scoreOpts}</select>
+        <select onchange="prospFilter.niche=this.value;prospSelected.clear();render()">${nicheOpts}</select>
+        ${prospFilter.stage!=='all'||prospFilter.score!=='all'||prospFilter.niche?`<button class="btn btn-ghost btn-sm" style="flex-shrink:0" onclick="prospFilter={stage:'all',score:'all',niche:''};render()">✕ Limpiar</button>`:''}
+      </div>
+      <div class="prosp-view-btns">
+        <button class="btn btn-sm${prospView==='table'?' btn-primary':' btn-ghost'}" onclick="prospView='table';render()" title="Tabla">${ic('fileText',14)}</button>
+        <button class="btn btn-sm${prospView==='kanban'?' btn-primary':' btn-ghost'}" onclick="prospView='kanban';render()" title="Kanban">${ic('arrows',14)}</button>
       </div>
     </div>`;
 
@@ -3411,18 +3565,34 @@ function viewProspectos(){
   if(prospView==='kanban'){
     let kcols='';
     PROSP_STAGES.filter(s=>s.k!=='Archivado').forEach(st=>{
-      const cards=_prosp.filter(p=>p.stage===st.k);
+      const cards=list.filter(p=>p.stage===st.k);
+      const rev=cards.reduce((a,p)=>a+(p.estimated_revenue||0),0);
       kcols+=`<div class="prosp-col">
         <div class="prosp-col-head">
-          <div class="prosp-col-name"><span style="width:8px;height:8px;border-radius:50%;background:${st.c};display:inline-block;flex-shrink:0"></span>${esc(st.k)}</div>
+          <div class="prosp-col-name">
+            <span style="width:8px;height:8px;border-radius:50%;background:${st.c};display:inline-block;flex-shrink:0"></span>
+            ${esc(st.k)}
+          </div>
           <span class="prosp-col-count">${cards.length}</span>
         </div>
+        ${rev>0?`<div style="padding:5px 13px;font-size:10px;color:var(--txt-3);border-bottom:1px solid var(--border-soft)">Facturación potencial: <span style="color:var(--c-light);font-weight:700">€${fmtK(rev)}/año</span></div>`:''}
         <div class="prosp-col-body">
-          ${cards.length?cards.map(p=>`<div class="prosp-card" style="border-left-color:${st.c}" onclick="openProspModal('${p.id}')">
-            <div class="prosp-card-name">${esc(p.store_name)}</div>
-            <div class="prosp-card-meta">${p.niche?esc(p.niche):'Sin nicho'}${p.estimated_revenue?` · <span style="color:var(--c-light)">€${fmtK(p.estimated_revenue)}/año</span>`:''}</div>
-            <div class="prosp-card-score">${[0,1,2].map(i=>`<div class="score-dot${i<calcProspScore(p)?' on':''}"></div>`).join('')}</div>
-          </div>`).join(''):`<div style="font-size:11px;color:var(--txt-3);text-align:center;padding:14px 0">Vacío</div>`}
+          ${cards.length?cards.map(p=>{
+            const sc=calcProspScore(p);
+            const scoreColors=['var(--border)','#F5C147','#F2974D','#3ECF8E'];
+            return`<div class="prosp-card" style="border-left-color:${st.c}" onclick="openProspModal('${p.id}')">
+              <div class="prosp-card-name">${esc(p.store_name)}</div>
+              ${p.domain?`<div class="prosp-card-domain">${esc(p.domain)}</div>`:''}
+              <div class="prosp-card-meta">
+                ${p.niche?`<span class="prosp-card-niche">${esc(p.niche)}</span>`:''}
+                ${p.estimated_revenue?`<span class="prosp-card-rev">€${fmtK(p.estimated_revenue)}/año</span>`:''}
+              </div>
+              <div class="prosp-card-score">
+                ${[0,1,2].map(i=>`<div class="score-dot${i<sc?' on s'+sc:''}" style="${i<sc?'background:'+scoreColors[sc]:''}"></div>`).join('')}
+                <span style="font-size:9px;color:${sc===0?'var(--txt-3)':scoreColors[sc]};margin-left:4px;font-weight:700">${sc}/3</span>
+              </div>
+            </div>`;
+          }).join(''):`<div style="font-size:11px;color:var(--txt-3);text-align:center;padding:16px 0;border:1.5px dashed var(--border);border-radius:var(--r);margin:4px">Vacío</div>`}
         </div>
       </div>`;
     });
@@ -3434,26 +3604,30 @@ function viewProspectos(){
   const rows=list.map(p=>{
     const ch=prospSelected.has(p.id);
     const sc=prospStageColor(p.stage);
-    const contacts=[
-      p.last_contact_email?`📧 ${p.last_contact_email}`:'',
-      p.last_contact_linkedin?`💼 ${p.last_contact_linkedin}`:'',
-      p.last_contact_instagram?`📸 ${p.last_contact_instagram}`:'',
-      p.last_contact_whatsapp?`📱 ${p.last_contact_whatsapp}`:''
-    ].filter(Boolean).join('<br>');
+    const lastContacts=[
+      p.last_contact_email?`<span title="Email">📧 ${p.last_contact_email}</span>`:'',
+      p.last_contact_linkedin?`<span title="LinkedIn">💼 ${p.last_contact_linkedin}</span>`:'',
+      p.last_contact_instagram?`<span title="Instagram">📸 ${p.last_contact_instagram}</span>`:'',
+      p.last_contact_whatsapp?`<span title="WhatsApp">📱 ${p.last_contact_whatsapp}</span>`:''
+    ].filter(Boolean);
+    const latestContact=lastContacts.length?lastContacts[0]:'<span style="color:var(--txt-3)">—</span>';
     return`<tr>
       <td class="cb-cell"><input type="checkbox" ${ch?'checked':''} onchange="toggleProspSel('${p.id}',this.checked)" style="width:15px;cursor:pointer;accent-color:var(--c-light)"></td>
-      <td style="font-weight:700;max-width:150px;word-break:break-all">${esc(p.store_name)}${p.domain?`<br><a href="https://${esc(p.domain)}" target="_blank" rel="noopener" style="font-size:10px;color:var(--c-light);font-weight:400">${esc(p.domain)}</a>`:''}</td>
+      <td>
+        <div class="prosp-store-name">${esc(p.store_name)}</div>
+        ${p.domain?`<div class="prosp-store-domain"><a href="https://${esc(p.domain)}" target="_blank" rel="noopener">${esc(p.domain)}</a><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--txt-3);flex-shrink:0"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>`:''}
+      </td>
       <td>${p.niche?`<span class="channel-tag">${esc(p.niche)}</span>`:'-'}</td>
-      <td style="font-family:var(--font-num);color:var(--c-light)">${p.estimated_revenue?'€'+fmtK(p.estimated_revenue):'-'}</td>
-      <td>${scoreHtml(p)}</td>
+      <td style="font-family:var(--font-num);font-weight:700;color:var(--c-light)">${p.estimated_revenue?'€'+fmtK(p.estimated_revenue):'-'}</td>
+      <td>${scoreHtmlV2(p)}</td>
       <td><span class="stage-badge" style="background:${sc}22;color:${sc};border:1px solid ${sc}44">${esc(p.stage)}</span></td>
-      <td style="font-size:10.5px;color:var(--txt-2);white-space:nowrap">${contacts||'<span style="color:var(--txt-3)">—</span>'}</td>
+      <td style="font-size:10.5px;color:var(--txt-2)">${latestContact}</td>
       <td>
         <div class="prosp-actions">
           ${p.meta_ads_library_url?`<a href="${esc(p.meta_ads_library_url)}" target="_blank" rel="noopener" class="iconbtn" title="Meta Ads Library">${svg('broadcast',14)}</a>`:''}
           <div class="iconbtn" onclick="openProspModal('${p.id}')" title="Editar">${svg('edit',14)}</div>
-          ${p.stage==='Cerrado Partner'&&!p.converted_client_id?`<div class="iconbtn" onclick="convertProspToCliente('${p.id}')" title="Crear ficha de cliente" style="color:var(--green);border-color:rgba(62,207,142,.3)">${svg('checks',14)}</div>`:''}
-          ${p.converted_client_id?`<div class="iconbtn" style="color:var(--green);border-color:rgba(62,207,142,.3)" title="Ya convertido a cliente">${svg('checkC',14)}</div>`:''}
+          ${p.stage==='Cerrado Partner'&&!p.converted_client_id?`<div class="iconbtn" onclick="convertProspToCliente('${p.id}')" title="Convertir a cliente" style="color:var(--green);border-color:rgba(62,207,142,.3)">${svg('checks',14)}</div>`:''}
+          ${p.converted_client_id?`<div class="iconbtn" style="color:var(--green);border-color:rgba(62,207,142,.3)" title="Ya es cliente">${svg('checkC',14)}</div>`:''}
           <div class="iconbtn danger" onclick="deleteProsp('${p.id}')" title="Eliminar">${svg('trash',14)}</div>
         </div>
       </td>
@@ -3466,14 +3640,14 @@ function viewProspectos(){
         <table class="prosp-tbl" style="min-width:820px">
           <thead><tr>
             <th class="cb-cell"><input type="checkbox" ${allChecked?'checked':''} onchange="toggleAllProsp(this.checked)" style="width:15px;cursor:pointer;accent-color:var(--c-light)"></th>
-            <th>Tienda / Dominio</th><th>Nicho</th><th>Facturación</th><th>Score</th>
-            <th>Etapa</th><th>Último contacto</th><th>Acciones</th>
+            <th>Tienda / Dominio</th><th>Nicho</th><th>Facturación/año</th>
+            <th>Score</th><th>Etapa</th><th>Último contacto</th><th>Acciones</th>
           </tr></thead>
           <tbody>${rows||`<tr><td colspan="8"><div class="empty" style="padding:28px">${ic('inbox',28)}<div>Sin prospectos con esos filtros</div></div></td></tr>`}</tbody>
         </table>
       </div>
     </div>
-    <div class="mini" style="margin-top:8px">${ic('info',13)} Mostrando ${list.length} de ${total} prospectos activos. Los archivados se ocultan por defecto.</div>`;
+    <div style="margin-top:8px;font-size:11px;color:var(--txt-3)">${ic('info',12)} ${list.length} de ${total} prospectos activos · archivados ocultos por defecto</div>`;
 }
 
 function toggleProspSel(id,checked){if(checked)prospSelected.add(id);else prospSelected.delete(id);render();}
@@ -3674,14 +3848,14 @@ let _csvRows=null,_csvHeaders=[];
 function openCSVImport(){
   _csvRows=null;_csvHeaders=[];
   modal(`<div class="modal full">
-    <h3>${ic('inbox',18)}Importar desde CSV / Excel</h3>
-    <p style="font-size:12.5px;color:var(--txt-2);margin-bottom:14px">Exporta tu Excel como CSV (UTF-8) y súbelo aquí. Mapeas las columnas en el paso 2.</p>
+    <h3>${ic('inbox',18)}Importar prospectos</h3>
+    <p style="font-size:12.5px;color:var(--txt-2);margin-bottom:14px">Acepta Excel (.xlsx) y CSV. Las columnas se detectan automáticamente — solo revisa el mapeo y pulsa Importar.</p>
     <div class="csv-drop" id="csvDrop" onclick="$('csvFileIn').click()">
       ${svg('inbox',32)}
-      <div style="font-size:14px;font-weight:700;margin:8px 0 4px">Haz clic o arrastra tu CSV aquí</div>
-      <div style="font-size:11px">CSV o TXT separado por comas o punto y coma</div>
+      <div style="font-size:14px;font-weight:700;margin:8px 0 4px">Haz clic o arrastra el archivo aquí</div>
+      <div style="font-size:11px;color:var(--txt-3)">.xlsx, .csv, .txt — detección automática de columnas</div>
     </div>
-    <input type="file" id="csvFileIn" accept=".csv,.txt,.tsv" style="display:none" onchange="onCSVFile(this)">
+    <input type="file" id="csvFileIn" accept=".csv,.txt,.tsv,.xlsx,.xls" style="display:none" onchange="onCSVFile(this)">
     <div id="csvMapArea" style="margin-top:14px"></div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeModalNow()">Cancelar</button>
@@ -3692,42 +3866,93 @@ function openCSVImport(){
     const drop=$('csvDrop');if(!drop)return;
     drop.ondragover=e=>{e.preventDefault();drop.classList.add('over');};
     drop.ondragleave=()=>drop.classList.remove('over');
-    drop.ondrop=e=>{e.preventDefault();drop.classList.remove('over');const f=e.dataTransfer.files[0];if(f)readCSVFile(f);};
+    drop.ondrop=e=>{e.preventDefault();drop.classList.remove('over');const f=e.dataTransfer.files[0];if(f)readImportFile(f);};
   },40);
 }
-function onCSVFile(inp){if(inp.files[0])readCSVFile(inp.files[0]);}
-function readCSVFile(file){const r=new FileReader();r.onload=e=>parseCSVText(e.target.result);r.readAsText(file,'UTF-8');}
+function onCSVFile(inp){if(inp.files[0])readImportFile(inp.files[0]);}
+function readImportFile(file){
+  const name=file.name.toLowerCase();
+  if(name.endsWith('.xlsx')||name.endsWith('.xls')){
+    const r=new FileReader();
+    r.onload=e=>{
+      try{
+        const wb=XLSX.read(e.target.result,{type:'array'});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        if(!data||data.length<2){toast('Archivo Excel vacío','warning');return;}
+        _csvHeaders=data[0].map(h=>(h||'').toString().trim());
+        _csvRows=data.slice(1).map(r=>_csvHeaders.map((_,i)=>(r[i]||'').toString().trim()));
+        showCSVMapper();
+      }catch(err){toast('Error leyendo Excel: '+err.message,'error');}
+    };
+    r.readAsArrayBuffer(file);
+  }else{
+    const r=new FileReader();
+    r.onload=e=>parseCSVText(e.target.result);
+    r.readAsText(file,'UTF-8');
+  }
+}
+function readCSVFile(file){readImportFile(file);}
 function parseCSVText(text){
   const lines=text.trim().split('\n').map(l=>l.trim()).filter(Boolean);
   if(lines.length<2){toast('Archivo vacío o inválido','warning');return;}
-  // Detect separator (most ; in header = use ;, else ,)
   const h0=lines[0];
-  const sep=h0.split(';').length>h0.split(',').length?';':',';
-  _csvHeaders=h0.split(sep).map(h=>h.replace(/^"|"$/g,'').trim());
-  _csvRows=lines.slice(1).map(l=>l.split(sep).map(v=>v.replace(/^"|"$/g,'').trim()));
+  const sep=h0.split(';').length>h0.split(',').length?';':h0.split('\t').length>h0.split(',').length?'\t':',';
+  function splitCSVLine(line){
+    const result=[];let cur='',inQ=false;
+    for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'&&!inQ){inQ=true;}else if(c==='"'&&inQ&&line[i+1]==='"'){cur+='"';i++;}else if(c==='"'&&inQ){inQ=false;}else if(c===sep&&!inQ){result.push(cur.trim());cur='';}else{cur+=c;}}
+    result.push(cur.trim());return result;
+  }
+  _csvHeaders=splitCSVLine(h0).map(h=>h.replace(/^"|"$/g,'').trim());
+  _csvRows=lines.slice(1).map(l=>splitCSVLine(l).map(v=>v.replace(/^"|"$/g,'').trim()));
   showCSVMapper();
 }
 function showCSVMapper(){
   const ma=$('csvMapArea');if(!ma)return;
   const opts=`<option value="">— ignorar —</option>${_csvHeaders.map((h,i)=>`<option value="${i}">${esc(h)}</option>`).join('')}`;
-  function auto(fieldLabel){
-    const lf=fieldLabel.toLowerCase().replace(/[^a-z]/g,'');
-    const i=_csvHeaders.findIndex(h=>{const hl=h.toLowerCase().replace(/[^a-z]/g,'');return hl===lf||hl.includes(lf)||lf.includes(hl);});
-    return i>=0?i:'';
+  // Aliases for Spanish/English auto-detection
+  const FIELD_ALIASES={
+    store_name:['nombre','tienda','negocio','empresa','name','store','business','brand'],
+    domain:['dominio','url','web','website','enlace','link','shopify','myshopify'],
+    niche:['nicho','categoria','sector','categoría','industry','category'],
+    estimated_revenue:['facturacion','facturación','revenue','ingresos','ventas','sales','mrr','monthly'],
+    email:['email','correo','mail','e-mail'],
+    instagram:['instagram','ig','insta','rrss','social'],
+    linkedin:['linkedin','li'],
+    whatsapp:['whatsapp','wp','telefono','teléfono','phone','movil','móvil','tel']
+  };
+  function auto(fieldKey){
+    const aliases=FIELD_ALIASES[fieldKey]||[];
+    for(let alias of aliases){
+      const i=_csvHeaders.findIndex(h=>{const hl=h.toLowerCase().replace(/[áàäâ]/g,'a').replace(/[éèëê]/g,'e').replace(/[íìïî]/g,'i').replace(/[óòöô]/g,'o').replace(/[úùüû]/g,'u').replace(/ñ/g,'n').replace(/[^a-z0-9]/g,'');return hl.includes(alias)||alias.includes(hl);});
+      if(i>=0)return i;
+    }
+    return '';
   }
+  const autoMap={};
+  CSV_COL_MAP.forEach(c=>{const m=auto(c.k);if(m!=='')autoMap[c.k]=m;});
+  const matchCount=Object.keys(autoMap).length;
   ma.innerHTML=`
-    <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;margin-bottom:8px">Mapeo de columnas — ${_csvRows.length} filas detectadas</div>
-    ${CSV_COL_MAP.map(c=>`<div class="map-row">
-      <div class="col-from">${esc(c.label)}</div>
-      <select id="map_${c.k}" style="font-size:12px;padding:5px 8px">${opts}</select>
-    </div>`).join('')}
-    <div style="margin-top:10px;background:var(--bg-2);border-radius:var(--r-sm);padding:10px;overflow-x:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:700">${_csvRows.length} filas detectadas</div>
+      <div style="font-size:11px;color:${matchCount>=3?'var(--green)':'var(--amber)'}">✓ ${matchCount}/${CSV_COL_MAP.length} columnas detectadas automáticamente</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;margin-bottom:12px">
+    ${CSV_COL_MAP.map(c=>{
+      const detected=autoMap[c.k]!==undefined;
+      return`<div style="background:var(--bg-2);border:1px solid ${detected?'rgba(62,207,142,.3)':'var(--border)'};border-radius:var(--r-sm);padding:9px 11px">
+        <div style="font-size:10px;font-weight:700;color:${detected?'var(--green)':'var(--txt-3)'};text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">${detected?'✓ ':''} ${esc(c.label)}</div>
+        <select id="map_${c.k}" style="font-size:12px;padding:5px 8px;width:100%">${opts}</select>
+      </div>`;
+    }).join('')}
+    </div>
+    <div style="background:var(--bg-2);border-radius:var(--r-sm);padding:10px;overflow-x:auto">
       <div style="font-size:10px;color:var(--txt-3);margin-bottom:6px">Vista previa (3 filas)</div>
       <table class="csv-preview-tbl"><thead><tr>${_csvHeaders.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead>
-      <tbody>${_csvRows.slice(0,3).map(r=>`<tr>${r.map(v=>`<td>${esc(v.slice(0,40))}</td>`).join('')}</tr>`).join('')}</tbody>
+      <tbody>${_csvRows.slice(0,3).map(r=>`<tr>${r.map(v=>`<td>${esc((v||'').slice(0,35))}</td>`).join('')}</tr>`).join('')}</tbody>
       </table>
     </div>`;
-  CSV_COL_MAP.forEach(c=>{const el=$('map_'+c.k);if(el){const m=auto(c.label.replace(' *','').trim());if(m!=='')el.value=m;}});
+  CSV_COL_MAP.forEach(c=>{const el=$('map_'+c.k);if(el&&autoMap[c.k]!==undefined)el.value=autoMap[c.k];});
   const btn=$('csvImportBtn');if(btn)btn.style.display='';
 }
 async function doCSVImport(){
