@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora LTV/CAC — M1 Media</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #0666F3;
+      --blue-dk: #0056D6;
+      --blue-bg: #EAF2FF;
+      --black:   #0A0A0A;
+      --gray:    #666B73;
+      --soft:    #F6F7F9;
+      --border:  #E6E8EC;
+      --green:   #18A957;
+      --red:     #E53935;
+      --orange:  #F57C00;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--soft);
+      color: var(--black);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: saturate(140%) blur(14px);
+      -webkit-backdrop-filter: saturate(140%) blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo  { height: 32px; width: auto; display: block; }
+    .nav-name  {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--black);
+      letter-spacing: -0.2px;
+    }
+    .nav-name span { color: var(--gray); font-weight: 500; }
+    .nav-badge {
+      background: var(--blue-bg);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: var(--black);
+      color: #fff;
+      padding: 64px 24px 56px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero-tag-dot { width: 6px; height: 6px; background: var(--blue); border-radius: 50%; }
+    .hero h1 {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 900;
+      font-size: clamp(34px, 5.5vw, 56px);
+      line-height: 1.04;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--blue); }
+    .hero p {
+      color: rgba(255,255,255,0.55);
+      font-size: 16px;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ─── MAIN ─── */
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 36px 20px 80px;
+    }
+
+    /* ─── SECTION CARD ─── */
+    .section {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      margin-bottom: 20px;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 10px;
+    }
+    .section h2 {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.3px;
+      margin-bottom: 14px;
+    }
+    .section p {
+      color: #3a3f48;
+      font-size: 15px;
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    .callout {
+      background: var(--blue-bg);
+      border-left: 3px solid var(--blue);
+      border-radius: 0 10px 10px 0;
+      padding: 18px 22px;
+      margin: 20px 0;
+    }
+    .callout p { color: #1a3a6e; margin: 0; font-size: 14px; line-height: 1.7; }
+    .callout strong { color: var(--blue); }
+
+    /* ─── FORMULA LIST ─── */
+    .formula-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .formula-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+    }
+    .formula-key {
+      background: var(--black);
+      color: #fff;
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+    }
+    .formula-val {
+      color: #3a3f48;
+      line-height: 1.6;
+      padding-top: 2px;
+    }
+    .formula-val code {
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: 'Inter', monospace;
+      font-size: 13px;
+      color: var(--blue);
+    }
+
+    /* ─── CALCULADORA ─── */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 8px;
+    }
+    @media (max-width: 660px) { .calc-grid { grid-template-columns: 1fr; } }
+
+    .inputs-panel, .results-panel {
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+    }
+
+    .panel-title {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .panel-icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .panel-icon.blue { background: var(--blue); color: #fff; }
+    .panel-icon.dark { background: var(--black); color: #fff; }
+
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 7px;
+    }
+    .field .hint {
+      font-size: 11px;
+      color: var(--gray);
+      font-weight: 400;
+      margin-left: 3px;
+    }
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-prefix {
+      position: absolute;
+      left: 12px;
+      font-size: 14px;
+      color: var(--gray);
+      font-weight: 600;
+      pointer-events: none;
+    }
+    .input-suffix {
+      position: absolute;
+      right: 12px;
+      font-size: 14px;
+      color: var(--gray);
+      font-weight: 600;
+      pointer-events: none;
+    }
+    .field input[type="number"] {
+      width: 100%;
+      padding: 10px 36px 10px 28px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: var(--black);
+      transition: border-color 0.15s;
+      -moz-appearance: textfield;
+    }
+    .field input[type="number"]::-webkit-inner-spin-button,
+    .field input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .field input[type="number"]:focus { outline: none; border-color: var(--blue); }
+
+    .field input[type="range"] {
+      width: 100%;
+      accent-color: var(--blue);
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 5px;
+    }
+    .range-val {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    /* ─── RESULTS ─── */
+    .result-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 10px;
+    }
+    .result-item:last-child { margin-bottom: 0; }
+    .result-label {
+      font-size: 11px;
+      color: var(--gray);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .result-value {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 900;
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+    .result-value.green { color: var(--green); }
+    .result-value.orange { color: var(--orange); }
+    .result-value.red   { color: var(--red); }
+    .result-value.blue  { color: var(--blue); }
+    .result-sub {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .ratio-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      margin-top: 6px;
+    }
+    .ratio-badge.green  { background: #E8F8EE; color: var(--green); }
+    .ratio-badge.orange { background: #FFF3E0; color: var(--orange); }
+    .ratio-badge.red    { background: #FFF0F0; color: var(--red); }
+    .ratio-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .ratio-badge.green  .ratio-dot { background: var(--green); }
+    .ratio-badge.orange .ratio-dot { background: var(--orange); }
+    .ratio-badge.red    .ratio-dot { background: var(--red); }
+
+    .headroom-bar-wrap { margin-top: 12px; }
+    .headroom-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--gray);
+      margin-bottom: 5px;
+    }
+    .headroom-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .headroom-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--green);
+      transition: width 0.4s ease;
+    }
+
+    .interp {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-top: 10px;
+    }
+    .interp h4 {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--gray);
+    }
+    .interp p { font-size: 13px; color: #3a3f48; line-height: 1.6; margin: 0; }
+    .interp-text { display: none; }
+    .interp-text.active { display: block; }
+
+    /* ─── PALANCAS ─── */
+    .palancas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .palanca-card {
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+    }
+    .palanca-card.featured {
+      background: var(--blue-bg);
+      border-color: #c7d9fe;
+    }
+    .palanca-num {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 900;
+      font-size: 14px;
+      color: var(--black);
+      margin-bottom: 12px;
+    }
+    .palanca-card.featured .palanca-num {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+    .palanca-name {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+    .palanca-card.featured .palanca-name { color: var(--blue); }
+    .palanca-body {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.65;
+    }
+    .palanca-card.featured .palanca-body { color: #1a3a6e; }
+    .palanca-tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    /* ─── FOOTER CTA ─── */
+    .footer-cta {
+      background: var(--black);
+      border-radius: 20px;
+      padding: 48px 40px;
+      text-align: center;
+      color: #fff;
+      margin-top: 20px;
+    }
+    .footer-cta-tag {
+      display: inline-block;
+      background: rgba(6,102,243,0.2);
+      color: #6ba3ff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+    .footer-cta h3 {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 900;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+    .footer-cta h3 span { color: var(--blue); }
+    .footer-cta p {
+      color: rgba(255,255,255,0.5);
+      font-size: 15px;
+      margin-bottom: 28px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.65;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      padding: 15px 34px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .cta-btn:hover { background: var(--blue-dk); }
+    .cta-note { margin-top: 12px; font-size: 12px; color: rgba(255,255,255,0.3); }
+
+    /* ─── FOOTER ─── */
+    .page-footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--gray);
+      border-top: 1px solid var(--border);
+      background: #fff;
+    }
+
+    @media (max-width: 600px) {
+      .nav-badge { display: none; }
+      .section   { padding: 24px 20px; }
+      .footer-cta { padding: 36px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <a class="nav-brand" href="../index.html">
+      <img src="../../../_BrandKIT/Logo M1 Media.png" alt="M1 Media" class="nav-logo">
+      <div class="nav-name">M1 Media <span>· Growth Partners</span></div>
+    </a>
+    <div class="nav-badge">Herramienta exclusiva</div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-tag">
+      <span class="hero-tag-dot"></span>
+      Calculadora Estratégica · Ecommerce
+    </div>
+    <h1>Calculadora <span>LTV/CAC</span><br>para Ecommerce</h1>
+    <p>Descubre cuánto vale realmente cada cliente, cuánto puedes pagar por adquirir uno nuevo y cuánto margen tienes para escalar en Meta.</p>
+  </section>
+
+  <main class="main">
+
+    <!-- CONTEXTO -->
+    <div class="section">
+      <div class="section-label">Por qué importa</div>
+      <h2>El número que determina si puedes escalar o no</h2>
+      <p>La mayoría de los ecommerces en el rango €8k–€40k/mes toman decisiones de inversión en Meta basándose en el ROAS de la semana pasada. Eso es como conducir mirando solo el espejo retrovisor.</p>
+      <p>El número que realmente te dice cuánto puedes gastar en adquirir un cliente es el <strong>ratio LTV/CAC</strong>. Un ratio saludable (≥3x) significa que tienes margen para subir el gasto en ads sin destruir la rentabilidad. Un ratio bajo te tiene atrapado en presupuestos pequeños para siempre.</p>
+
+      <div class="callout">
+        <p><strong>La mecánica:</strong> si tu LTV es €90 y tu CAC es €30, tienes un ratio de 3x. Puedes pagar hasta €30 por cliente y seguir siendo rentable. Pero si consigues que tu LTV suba a €120 (clientes que recompran), de repente puedes pagar €40 — y eso te permite escalar el presupuesto de ads donde muchos competidores no pueden seguirte.</p>
+      </div>
+
+      <ul class="formula-list">
+        <li>
+          <span class="formula-key">LTV</span>
+          <span class="formula-val">Valor de vida del cliente = <code>AOV × compras/año × años activo × margen%</code></span>
+        </li>
+        <li>
+          <span class="formula-key">CAC máximo</span>
+          <span class="formula-val">Lo máximo que puedes pagar por un cliente = <code>LTV ÷ 3</code> (regla de las 3x)</span>
+        </li>
+        <li>
+          <span class="formula-key">Headroom</span>
+          <span class="formula-val">Margen de escalado = <code>CAC máximo − CAC actual</code></span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- CALCULADORA -->
+    <div class="section">
+      <div class="section-label">Calculadora interactiva</div>
+      <h2>Introduce los datos de tu ecommerce</h2>
+
+      <div class="calc-grid">
+
+        <!-- INPUTS -->
+        <div class="inputs-panel">
+          <div class="panel-title">
+            <div class="panel-icon blue">✎</div>
+            Tus datos
+          </div>
+
+          <div class="field">
+            <label for="aov">Ticket medio por pedido <span class="hint">(AOV)</span></label>
+            <div class="input-wrap">
+              <span class="input-prefix">€</span>
+              <input type="number" id="aov" value="65" min="1" max="9999">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="freq">Compras por cliente al año</label>
+            <div class="input-wrap">
+              <input type="number" id="freq" value="2.2" min="0.1" max="52" step="0.1">
+              <span class="input-suffix">×</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="years">Años de vida media del cliente</label>
+            <div class="input-wrap">
+              <input type="number" id="years" value="2" min="0.5" max="10" step="0.5">
+              <span class="input-suffix">años</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Margen bruto <span class="hint">(después de producto y envío)</span></label>
+            <input type="range" id="margin" min="10" max="85" value="45" step="1"
+              oninput="document.getElementById('margin-val').textContent=this.value+'%'; calcular()">
+            <div class="range-labels">
+              <span>10%</span>
+              <span class="range-val" id="margin-val">45%</span>
+              <span>85%</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="cac">CAC actual <span class="hint">(coste real por cliente)</span></label>
+            <div class="input-wrap">
+              <span class="input-prefix">€</span>
+              <input type="number" id="cac" value="28" min="1" max="999">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>% clientes que recompran hoy</label>
+            <input type="range" id="recurrence" min="0" max="80" value="18" step="1"
+              oninput="document.getElementById('rec-val').textContent=this.value+'%'; calcular()">
+            <div class="range-labels">
+              <span>0%</span>
+              <span class="range-val" id="rec-val">18%</span>
+              <span>80%</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Objetivo de recompra <span class="hint">(con mejora activa)</span></label>
+            <input type="range" id="rec-target" min="0" max="80" value="35" step="1"
+              oninput="document.getElementById('rect-val').textContent=this.value+'%'; calcular()">
+            <div class="range-labels">
+              <span>0%</span>
+              <span class="range-val" id="rect-val">35%</span>
+              <span>80%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="results-panel">
+          <div class="panel-title">
+            <div class="panel-icon dark">→</div>
+            Resultados
+          </div>
+
+          <div class="result-item">
+            <div class="result-label">LTV actual</div>
+            <div class="result-value blue" id="res-ltv">—</div>
+            <div class="result-sub" id="res-ltv-sub"></div>
+          </div>
+
+          <div class="result-item">
+            <div class="result-label">CAC máximo pagable (regla 3x)</div>
+            <div class="result-value" id="res-cac-max">—</div>
+            <div class="result-sub" id="res-cac-sub"></div>
+          </div>
+
+          <div class="result-item">
+            <div class="result-label">Ratio LTV / CAC actual</div>
+            <div id="res-ratio-wrap">
+              <div class="ratio-badge green" id="res-ratio-badge">
+                <div class="ratio-dot"></div>
+                <span id="res-ratio-text">—</span>
+              </div>
+            </div>
+            <div class="headroom-bar-wrap">
+              <div class="headroom-bar-label">
+                <span>CAC actual</span>
+                <span id="res-headroom-label">Margen disponible</span>
+              </div>
+              <div class="headroom-bar">
+                <div class="headroom-bar-fill" id="res-bar" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-item">
+            <div class="result-label">LTV con objetivo de recompra</div>
+            <div class="result-value green" id="res-ltv-target">—</div>
+            <div class="result-sub" id="res-ltv-target-sub"></div>
+          </div>
+
+          <div class="result-item">
+            <div class="result-label">CAC máximo con LTV objetivo</div>
+            <div class="result-value green" id="res-cac-target">—</div>
+            <div class="result-sub" id="res-cac-target-sub"></div>
+          </div>
+
+          <div class="interp">
+            <h4>Qué significa</h4>
+            <div class="interp-text green active" id="interp-green">
+              <p>Ratio en zona <strong style="color:var(--green)">verde (&gt;3x)</strong>. Tienes margen para escalar el presupuesto en Meta. El siguiente paso es activar la recompra para ampliar aún más ese margen.</p>
+            </div>
+            <div class="interp-text orange" id="interp-orange">
+              <p>Ratio en zona <strong style="color:var(--orange)">amarilla (1.5–3x)</strong>. Puedes correr ads, pero el margen es ajustado. Subir el LTV a través de la recompra es la palanca más rápida para desbloquear el escalado.</p>
+            </div>
+            <div class="interp-text red" id="interp-red">
+              <p>Ratio en zona <strong style="color:var(--red)">roja (&lt;1.5x)</strong>. Escalar en Meta ahora destruiría margen. Primero hay que trabajar el LTV: precio medio, recompra y márgenes.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PALANCAS -->
+    <div class="section">
+      <div class="section-label">Las palancas reales</div>
+      <h2>¿Qué mueve el LTV de tu ecommerce?</h2>
+      <p>El LTV tiene tres palancas. La mayoría de los ecommerces solo tocan la primera. Las dos restantes son las que más mueven la aguja a largo plazo.</p>
+
+      <div class="palancas-grid">
+        <div class="palanca-card">
+          <div class="palanca-num">1</div>
+          <div class="palanca-name">Ticket medio (AOV)</div>
+          <p class="palanca-body">Bundles, upsells en el checkout, umbral de envío gratis. Impacto inmediato pero limitado. Es la palanca más tocada y la de menor upside marginal.</p>
+        </div>
+
+        <div class="palanca-card featured">
+          <div class="palanca-num">2</div>
+          <div class="palanca-name">Frecuencia de recompra</div>
+          <p class="palanca-body">Secuencia de email postventa, reorder flows a los 30-45 días, suscripciones. Es la palanca con más impacto en el LTV. Cada 10% de mejora en recompra puede subir el LTV un 25-40%.</p>
+          <span class="palanca-tag">Mayor impacto</span>
+        </div>
+
+        <div class="palanca-card">
+          <div class="palanca-num">3</div>
+          <div class="palanca-name">Margen bruto</div>
+          <p class="palanca-body">Pricing, mix de productos, optimización de logística. Mejorar el margen un 5% puede abrir más headroom de escalado que subir el AOV un 20%.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER CTA -->
+    <div class="footer-cta">
+      <div class="footer-cta-tag">Auditoría gratuita</div>
+      <h3>¿Tu ratio necesita <span>trabajo</span>?</h3>
+      <p>En la auditoría gratuita identificamos exactamente qué palanca tiene más potencial en tu ecommerce y cómo activarla.</p>
+      <a href="https://calendly.com/m1media/30min" class="cta-btn">Reservar auditoría gratuita →</a>
+      <div class="cta-note">Sin compromiso · Plazas limitadas este mes</div>
+    </div>
+
+  </main>
+
+  <footer class="page-footer">
+    <strong>M1 Media Agency</strong> · m1media.es · +34 631 103 840<br>
+    Herramienta para uso exclusivo del destinatario.
+  </footer>
+
+  <script>
+    function fmt(n) { return '€' + Math.round(n).toLocaleString('es-ES'); }
+    function fmtX(n) { return n.toFixed(2) + 'x'; }
+
+    function calcular() {
+      const aov       = parseFloat(document.getElementById('aov').value)       || 0;
+      const freq      = parseFloat(document.getElementById('freq').value)      || 0;
+      const years     = parseFloat(document.getElementById('years').value)     || 0;
+      const margin    = parseInt(document.getElementById('margin').value)      / 100;
+      const cac       = parseFloat(document.getElementById('cac').value)       || 0;
+      const rec       = parseInt(document.getElementById('recurrence').value)  / 100;
+      const recTarget = parseInt(document.getElementById('rec-target').value)  / 100;
+
+      const baseOrders    = freq * years;
+      const recBonus      = rec * freq * years;
+      const ltv           = aov * (baseOrders + recBonus * 0.5) * margin;
+      const recTargetBonus = recTarget * freq * years;
+      const ltvTarget     = aov * (baseOrders + recTargetBonus * 0.5) * margin;
+      const cacMax        = ltv / 3;
+      const cacMaxTarget  = ltvTarget / 3;
+      const ratio         = cac > 0 ? ltv / cac : 0;
+      const headroom      = cacMax - cac;
+      const barPct        = cacMax > 0 ? Math.min(100, (cac / cacMax) * 100) : 100;
+
+      document.getElementById('res-ltv').textContent     = fmt(ltv);
+      document.getElementById('res-ltv-sub').textContent = `AOV €${aov} × ${freq}×/año × ${years} años × ${(margin*100).toFixed(0)}% margen`;
+
+      document.getElementById('res-cac-max').textContent = fmt(cacMax);
+      const diffCacMax = cacMax - cac;
+      if (diffCacMax > 0) {
+        document.getElementById('res-cac-max').className     = 'result-value green';
+        document.getElementById('res-cac-sub').textContent   = `Puedes pagar ${fmt(diffCacMax)} más por cliente`;
+      } else {
+        document.getElementById('res-cac-max').className     = 'result-value red';
+        document.getElementById('res-cac-sub').textContent   = `CAC actual supera el máximo en ${fmt(-diffCacMax)}`;
+      }
+
+      const badge     = document.getElementById('res-ratio-badge');
+      const ratioText = document.getElementById('res-ratio-text');
+      ratioText.textContent = fmtX(ratio) + ' LTV/CAC';
+      badge.className = 'ratio-badge';
+      if (ratio >= 3)        badge.classList.add('green');
+      else if (ratio >= 1.5) badge.classList.add('orange');
+      else                   badge.classList.add('red');
+
+      const bar = document.getElementById('res-bar');
+      bar.style.width = barPct + '%';
+      if (barPct > 90)      bar.style.background = 'var(--red)';
+      else if (barPct > 70) bar.style.background = 'var(--orange)';
+      else                  bar.style.background = 'var(--green)';
+
+      document.getElementById('res-headroom-label').textContent =
+        headroom > 0 ? `+${fmt(headroom)} headroom` : `Excedido en ${fmt(-headroom)}`;
+
+      document.getElementById('res-ltv-target').textContent = fmt(ltvTarget);
+      const uplift = ltvTarget - ltv;
+      document.getElementById('res-ltv-target-sub').textContent = uplift >= 0
+        ? `+${fmt(uplift)} vs. situación actual (+${((uplift/ltv)*100).toFixed(0)}%)`
+        : `${fmt(uplift)} vs. situación actual`;
+
+      document.getElementById('res-cac-target').textContent     = fmt(cacMaxTarget);
+      document.getElementById('res-cac-target-sub').textContent = `CAC máximo con ${(recTarget*100).toFixed(0)}% de recompra`;
+
+      document.getElementById('interp-green').className  = 'interp-text green'  + (ratio >= 3              ? ' active' : '');
+      document.getElementById('interp-orange').className = 'interp-text orange' + (ratio >= 1.5 && ratio < 3 ? ' active' : '');
+      document.getElementById('interp-red').className    = 'interp-text red'    + (ratio < 1.5             ? ' active' : '');
+    }
+
+    ['aov','freq','years','cac'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calcular);
+    });
+
+    calcular();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autodiagnóstico — M1 Media</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #0666F3;
+      --blue-dk: #0056D6;
+      --blue-bg: #EAF2FF;
+      --black:   #0A0A0A;
+      --gray:    #666B73;
+      --soft:    #F6F7F9;
+      --border:  #E6E8EC;
+      --green:   #18A957;
+      --red:     #E53935;
+      --orange:  #F57C00;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--soft);
+      color: var(--black);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: saturate(140%) blur(14px);
+      -webkit-backdrop-filter: saturate(140%) blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo { height: 32px; width: auto; display: block; }
+    .nav-name {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--black);
+      letter-spacing: -0.2px;
+    }
+    .nav-name span { color: var(--gray); font-weight: 500; }
+    .nav-badge {
+      background: var(--blue-bg);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: var(--black);
+      color: #fff;
+      padding: 64px 24px 56px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero-tag-dot {
+      width: 6px; height: 6px;
+      background: var(--blue);
+      border-radius: 50%;
+    }
+    .hero h1 {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 900;
+      font-size: clamp(34px, 5.5vw, 56px);
+      line-height: 1.04;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--blue); }
+    .hero p {
+      color: rgba(255,255,255,0.55);
+      font-size: 16px;
+      max-width: 500px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .hero-steps {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .hero-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero-step:last-child { border-right: none; }
+    .hero-step-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    /* ─── MAIN ─── */
+    .main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 36px 20px 80px;
+    }
+
+    /* ─── PROGRESS ─── */
+    .progress-wrap {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .progress-info {
+      flex-shrink: 0;
+    }
+    .progress-count {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--black);
+      line-height: 1;
+    }
+    .progress-label-text {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+    .progress-bar-col { flex: 1; }
+    .progress-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--blue);
+      transition: width 0.4s ease;
+    }
+    .progress-pct {
+      font-size: 12px;
+      color: var(--gray);
+      text-align: right;
+      margin-top: 6px;
+    }
+
+    /* ─── CUELLO SECTION ─── */
+    .cuello-section {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      transition: box-shadow 0.2s;
+    }
+    .cuello-section:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .cuello-header {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cuello-badge {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 900;
+      font-size: 17px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .c1 { background: var(--blue); }
+    .c2 { background: var(--black); }
+    .c3 { background: var(--green); }
+    .c4 { background: var(--orange); }
+
+    .cuello-name {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+    .cuello-desc { font-size: 13px; color: var(--gray); line-height: 1.4; }
+
+    .cuello-questions { padding: 4px 0; }
+
+    .question-item {
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--soft);
+      transition: background 0.1s;
+    }
+    .question-item:last-child { border-bottom: none; }
+    .question-item:hover { background: var(--soft); }
+
+    .question-text {
+      flex: 1;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #2a2f38;
+    }
+
+    .question-toggle {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .toggle-btn {
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1.5px solid var(--border);
+      background: var(--soft);
+      color: var(--gray);
+    }
+    .toggle-btn:hover { border-color: var(--black); color: var(--black); }
+    .toggle-btn.yes.selected { background: #FFF0F0; color: var(--red); border-color: var(--red); }
+    .toggle-btn.no.selected  { background: #E8F8EE; color: var(--green); border-color: var(--green); }
+
+    /* ─── SCORE ─── */
+    .cuello-score {
+      padding: 10px 24px;
+      background: var(--soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--gray);
+    }
+    .cuello-score-num {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+    }
+    .cuello-score-num.zero  { color: var(--green); }
+    .cuello-score-num.one   { color: var(--orange); }
+    .cuello-score-num.multi { color: var(--red); }
+
+    /* ─── CALCULAR BTN ─── */
+    .calc-btn-wrap { text-align: center; margin-top: 16px; }
+    .calc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 40px;
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 17px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      letter-spacing: -0.2px;
+    }
+    .calc-btn:hover:not(:disabled) { background: var(--blue-dk); transform: translateY(-1px); }
+    .calc-btn:disabled { background: var(--border); color: var(--gray); cursor: default; transform: none; }
+    .calc-hint { font-size: 13px; color: var(--gray); margin-top: 10px; }
+
+    /* ─── RESULT PANEL ─── */
+    #result-panel {
+      display: none;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    #result-panel.visible { display: block; }
+
+    .result-header {
+      background: var(--black);
+      color: #fff;
+      padding: 36px 32px;
+      text-align: center;
+    }
+    .result-header-tag {
+      display: inline-block;
+      background: rgba(6,102,243,0.25);
+      color: #6ba3ff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+    }
+    .result-header h2 {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 900;
+      font-size: 26px;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .result-header p { color: rgba(255,255,255,0.5); font-size: 14px; }
+
+    .result-body { padding: 32px; }
+
+    .result-bottlenecks {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .result-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .result-row-badge {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 900;
+      font-size: 15px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .result-row-info { flex: 1; min-width: 0; }
+    .result-row-name {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .result-bar-wrap {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .result-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+    .result-row-score {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 900;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
+    .result-verdict {
+      background: var(--soft);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+    .result-verdict h3 {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .result-verdict p {
+      font-size: 14px;
+      color: #3a3f48;
+      line-height: 1.75;
+    }
+    .verdict-highlight { color: var(--blue); font-weight: 600; }
+
+    .cta-section {
+      background: var(--black);
+      border-radius: 14px;
+      padding: 32px;
+      text-align: center;
+      color: #fff;
+    }
+    .cta-section h3 {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .cta-section p {
+      color: rgba(255,255,255,0.55);
+      font-size: 14px;
+      margin-bottom: 22px;
+      line-height: 1.65;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-btn-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      padding: 14px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .cta-btn-main:hover { background: var(--blue-dk); }
+    .cta-btn-sec {
+      display: block;
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      margin-top: 10px;
+    }
+
+    /* ─── EMAIL CAPTURE ─── */
+    .email-capture-wrap {
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .email-capture-sep {
+      font-size: 11px;
+      color: var(--gray);
+      margin-bottom: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .email-capture-title {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .email-capture-sub {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.65;
+      margin-bottom: 20px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    .form-input {
+      flex: 1;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--black);
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s;
+      min-width: 0;
+    }
+    .form-input:focus { border-color: var(--blue); }
+    .form-input::placeholder { color: #aab0bb; }
+    .form-submit {
+      width: 100%;
+      padding: 13px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .form-submit:hover { background: var(--blue-dk); }
+
+    .email-success {
+      text-align: center;
+      padding: 28px;
+      background: #E8F8EE;
+      border: 1px solid #B7DFC4;
+      border-radius: 14px;
+      margin-top: 20px;
+    }
+    .email-success-icon {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .email-success h4 {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .email-success p { font-size: 14px; color: #2d4f2d; }
+
+    .reset-btn {
+      display: block;
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--gray);
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .reset-btn:hover { background: var(--soft); border-color: #d0d4da; }
+
+    /* ─── FOOTER ─── */
+    .page-footer {
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 12px;
+      color: var(--gray);
+      border-top: 1px solid var(--border);
+      background: #fff;
+    }
+
+    @media (max-width: 600px) {
+      .nav-badge { display: none; }
+      .hero-steps { flex-direction: column; border-radius: 12px; }
+      .hero-step { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); width: 100%; }
+      .hero-step:last-child { border-bottom: none; }
+      .form-row { flex-direction: column; }
+      .question-item { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .question-toggle { align-self: flex-end; }
+      .result-body { padding: 20px; }
+      .cta-section { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <a class="nav-brand" href="../index.html">
+      <img src="../../../_BrandKIT/Logo M1 Media.png" alt="M1 Media" class="nav-logo">
+      <div class="nav-name">M1 Media <span>· Growth Partners</span></div>
+    </a>
+    <div class="nav-badge">Diagnóstico gratuito</div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-tag">
+      <span class="hero-tag-dot"></span>
+      Autodiagnóstico · 12 preguntas · 2 min
+    </div>
+    <h1>¿Cuál de los <span>4 cuellos</span><br>frena tu ecommerce?</h1>
+    <p>Responde sí o no a 12 preguntas. En 2 minutos sabrás exactamente dónde está el problema que más está costándote facturación.</p>
+    <div class="hero-steps">
+      <div class="hero-step"><div class="hero-step-num">1</div> 12 preguntas sí/no</div>
+      <div class="hero-step"><div class="hero-step-num">2</div> Puntuación por cuello</div>
+      <div class="hero-step"><div class="hero-step-num">3</div> Diagnóstico + siguiente paso</div>
+    </div>
+  </section>
+
+  <main class="main">
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <div class="progress-count" id="progress-count-num">0</div>
+        <div class="progress-label-text">de 12 respondidas</div>
+      </div>
+      <div class="progress-bar-col">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="progress-pct" id="progress-pct">0%</div>
+      </div>
+    </div>
+
+    <!-- CUELLO 1 — FATIGA CREATIVA -->
+    <div class="cuello-section">
+      <div class="cuello-header">
+        <div class="cuello-badge c1">1</div>
+        <div>
+          <div class="cuello-name">Fatiga creativa</div>
+          <div class="cuello-desc">Creatividades que se agotan, variantes en vez de ángulos, CTR cayendo</div>
+        </div>
+      </div>
+      <div class="cuello-questions">
+        <div class="question-item" data-cuello="1">
+          <div class="question-text">¿Tu cuenta de Meta tiene menos de 5 ángulos creativos <em>distintos</em> corriendo a la vez (no 5 variantes del mismo mensaje)?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q1-1', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q1-1', 'no')">No</button>
+          </div>
+        </div>
+        <div class="question-item" data-cuello="1">
+          <div class="question-text">¿La tasa de clics (CTR) de tus anuncios ha caído más de un 25% en los últimos 60 días sin haber reducido el presupuesto?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q1-2', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q1-2', 'no')">No</button>
+          </div>
+        </div>
+        <div class="question-item" data-cuello="1">
+          <div class="question-text">Cuando un creativo deja de rendir, ¿lo sustituyes habitualmente por una variante del mismo mensaje (mismo argumento, diferente imagen o música)?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q1-3', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q1-3', 'no')">No</button>
+          </div>
+        </div>
+      </div>
+      <div class="cuello-score">
+        <span>Señales de fatiga creativa detectadas</span>
+        <span class="cuello-score-num zero" id="score-c1">0 / 3</span>
+      </div>
+    </div>
+
+    <!-- CUELLO 2 — ARQUITECTURA -->
+    <div class="cuello-section">
+      <div class="cuello-header">
+        <div class="cuello-badge c2">2</div>
+        <div>
+          <div class="cuello-name">Arquitectura de campaña</div>
+          <div class="cuello-desc">Presupuesto fragmentado, fase de aprendizaje permanente, estructura caótica</div>
+        </div>
+      </div>
+      <div class="cuello-questions">
+        <div class="question-item" data-cuello="2">
+          <div class="question-text">¿Tienes más de 10 campañas activas simultáneamente en tu cuenta de Meta?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q2-1', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q2-1', 'no')">No</button>
+          </div>
+        </div>
+        <div class="question-item" data-cuello="2">
+          <div class="question-text">¿Alguno de tus conjuntos de anuncios activos genera menos de 50 conversiones por semana?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q2-2', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q2-2', 'no')">No</button>
+          </div>
+        </div>
+        <div class="question-item" data-cuello="2">
+          <div class="question-text">¿Tu presupuesto total está dividido entre más de 6 conjuntos de anuncios activos?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q2-3', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q2-3', 'no')">No</button>
+          </div>
+        </div>
+      </div>
+      <div class="cuello-score">
+        <span>Señales de arquitectura deficiente detectadas</span>
+        <span class="cuello-score-num zero" id="score-c2">0 / 3</span>
+      </div>
+    </div>
+
+    <!-- CUELLO 3 — DEPENDENCIA PRIMERA COMPRA -->
+    <div class="cuello-section">
+      <div class="cuello-header">
+        <div class="cuello-badge c3">3</div>
+        <div>
+          <div class="cuello-name">Dependencia de la primera compra</div>
+          <div class="cuello-desc">LTV bajo, sin flujos de recompra, margen de escalado estrecho</div>
+        </div>
+      </div>
+      <div class="cuello-questions">
+        <div class="question-item" data-cuello="3">
+          <div class="question-text">¿Menos del 25% de tu facturación mensual proviene de clientes que ya compraron antes?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q3-1', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q3-1', 'no')">No</button>
+          </div>
+        </div>
+        <div class="question-item" data-cuello="3">
+          <div class="question-text">¿No tienes una secuencia de email automatizada post-compra (más allá de la confirmación de pedido de Shopify)?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q3-2', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q3-2', 'no')">No</button>
+          </div>
+        </div>
+        <div class="question-item" data-cuello="3">
+          <div class="question-text">¿Tu coste por adquisición actual deja poco margen si lo comparas con el ticket medio de una sola compra (ratio LTV/CAC inferior a 2.5)?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q3-3', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q3-3', 'no')">No</button>
+          </div>
+        </div>
+      </div>
+      <div class="cuello-score">
+        <span>Señales de dependencia de primera compra</span>
+        <span class="cuello-score-num zero" id="score-c3">0 / 3</span>
+      </div>
+    </div>
+
+    <!-- CUELLO 4 — OFERTA / LANDING -->
+    <div class="cuello-section">
+      <div class="cuello-header">
+        <div class="cuello-badge c4">4</div>
+        <div>
+          <div class="cuello-name">Oferta y landing no optimizadas para Meta</div>
+          <div class="cuello-desc">Tráfico frío a página estándar, message match roto, conversión baja</div>
+        </div>
+      </div>
+      <div class="cuello-questions">
+        <div class="question-item" data-cuello="4">
+          <div class="question-text">¿Envías el tráfico de tus anuncios directamente a la página de producto estándar de Shopify (sin una landing específica para tráfico frío)?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q4-1', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q4-1', 'no')">No</button>
+          </div>
+        </div>
+        <div class="question-item" data-cuello="4">
+          <div class="question-text">¿La primera pantalla de tu página de destino no refleja exactamente el mensaje o la promesa de tu anuncio (message match)?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q4-2', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q4-2', 'no')">No</button>
+          </div>
+        </div>
+        <div class="question-item" data-cuello="4">
+          <div class="question-text">¿Tu tasa de conversión de tráfico frío de Meta está por debajo del 1.5%?</div>
+          <div class="question-toggle">
+            <button class="toggle-btn yes" onclick="responder(this, 'q4-3', 'si')">Sí</button>
+            <button class="toggle-btn no"  onclick="responder(this, 'q4-3', 'no')">No</button>
+          </div>
+        </div>
+      </div>
+      <div class="cuello-score">
+        <span>Señales de oferta/landing desalineada</span>
+        <span class="cuello-score-num zero" id="score-c4">0 / 3</span>
+      </div>
+    </div>
+
+    <!-- CALCULAR -->
+    <div class="calc-btn-wrap">
+      <button class="calc-btn" id="calc-btn" onclick="mostrarResultado()" disabled>
+        Ver mi diagnóstico →
+      </button>
+      <div class="calc-hint" id="calc-hint">Responde las 12 preguntas para ver el diagnóstico</div>
+    </div>
+
+    <!-- RESULTADO -->
+    <div id="result-panel">
+      <div class="result-header">
+        <div class="result-header-tag">Tu diagnóstico</div>
+        <h2 id="res-title">Resultado</h2>
+        <p id="res-subtitle">Basado en tus respuestas</p>
+      </div>
+      <div class="result-body">
+
+        <div class="result-bottlenecks" id="result-bottlenecks"></div>
+
+        <div class="result-verdict">
+          <h3 id="verdict-title">Análisis</h3>
+          <p id="verdict-body"></p>
+        </div>
+
+        <div class="cta-section">
+          <h3 id="cta-title">El siguiente paso</h3>
+          <p id="cta-body"></p>
+          <a href="https://calendly.com/m1media/30min" class="cta-btn-main" id="cta-link">Reservar auditoría gratuita →</a>
+          <span class="cta-btn-sec">Sin compromiso · Plazas limitadas este mes</span>
+        </div>
+
+        <div class="email-capture-wrap" id="email-form-wrap">
+          <p class="email-capture-sep">— o recibe el diagnóstico por email —</p>
+          <h4 class="email-capture-title">Envíate el resultado</h4>
+          <p class="email-capture-sub">Déjanos tu nombre y email y te enviamos el diagnóstico completo con el plan específico para tu cuello principal.</p>
+          <form id="email-form" onsubmit="submitDiagnostico(event)">
+            <div class="form-row">
+              <input type="text"  placeholder="Tu nombre" id="form-name"  class="form-input" required>
+              <input type="email" placeholder="Tu email"  id="form-email" class="form-input" required>
+            </div>
+            <button type="submit" class="form-submit">Enviarme el diagnóstico →</button>
+          </form>
+        </div>
+
+        <div class="email-success" id="email-success" style="display:none;">
+          <div class="email-success-icon">✓</div>
+          <h4>¡Listo! Revisa tu bandeja de entrada.</h4>
+          <p>Te hemos enviado el diagnóstico completo con el análisis de tu cuello principal.</p>
+        </div>
+
+        <button class="reset-btn" onclick="reiniciar()">↩ Reiniciar diagnóstico</button>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="page-footer">
+    <strong>M1 Media Agency</strong> · m1media.es · +34 631 103 840<br>
+    Diagnóstico orientativo. Los resultados dependen de la honestidad de las respuestas.
+  </footer>
+
+  <script>
+    const answers = {};
+    const cuellosData = [
+      {
+        id: 1, name: "Fatiga creativa",
+        color: "#0666F3",
+        desc: "Tus anuncios se desgastan rápido y no tienes sistema para renovarlos.",
+        fix: "Construir un mapa de 7 ángulos distintos basado en el lenguaje real de tus clientes (VOC)."
+      },
+      {
+        id: 2, name: "Arquitectura de campaña",
+        color: "#0A0A0A",
+        desc: "El presupuesto está tan fragmentado que Meta nunca sale de la fase de aprendizaje.",
+        fix: "Consolidar a 2-3 campañas con presupuesto suficiente por adset para generar 50+ conversiones/semana."
+      },
+      {
+        id: 3, name: "Dependencia de la primera compra",
+        color: "#18A957",
+        desc: "Estás pagando a Meta por cada euro de facturación en vez de aprovechar a los clientes que ya tienes.",
+        fix: "Activar flujos automáticos de recompra: email postventa, reorder a los 45 días, programa de fidelización simple."
+      },
+      {
+        id: 4, name: "Oferta y landing desalineadas",
+        color: "#F57C00",
+        desc: "El tráfico frío llega a una página que no está diseñada para convertirlo.",
+        fix: "Diseñar una landing específica para tráfico frío con message match perfecto con el anuncio y los 5 elementos de conversión."
+      }
+    ];
+
+    function responder(btn, qId, valor) {
+      const wrap = btn.closest('.question-toggle');
+      wrap.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      answers[qId] = valor;
+      updateProgress();
+      updateScores();
+    }
+
+    function updateProgress() {
+      const total = Object.keys(answers).length;
+      document.getElementById('progress-count-num').textContent = total;
+      document.getElementById('progress-fill').style.width = `${(total/12)*100}%`;
+      document.getElementById('progress-pct').textContent = Math.round((total/12)*100) + '%';
+
+      const btn  = document.getElementById('calc-btn');
+      const hint = document.getElementById('calc-hint');
+      if (total === 12) {
+        btn.disabled = false;
+        hint.textContent = '¡Listo! Haz clic para ver tu diagnóstico.';
+        hint.style.color = '#18A957';
+      } else {
+        btn.disabled = true;
+        hint.textContent = `Responde las ${12-total} preguntas restantes`;
+        hint.style.color = '';
+      }
+    }
+
+    function updateScores() {
+      const scores = getScores();
+      for (let c = 1; c <= 4; c++) {
+        const el = document.getElementById(`score-c${c}`);
+        const s  = scores[c];
+        el.textContent = `${s} / 3`;
+        el.className = 'cuello-score-num ' + (s === 0 ? 'zero' : s === 1 ? 'one' : 'multi');
+      }
+    }
+
+    function getScores() {
+      const scores = {1:0, 2:0, 3:0, 4:0};
+      const qMap = {
+        'q1-1':1,'q1-2':1,'q1-3':1,
+        'q2-1':2,'q2-2':2,'q2-3':2,
+        'q3-1':3,'q3-2':3,'q3-3':3,
+        'q4-1':4,'q4-2':4,'q4-3':4
+      };
+      for (const [qId, val] of Object.entries(answers)) {
+        if (val === 'si') scores[qMap[qId]]++;
+      }
+      return scores;
+    }
+
+    function mostrarResultado() {
+      const scores = getScores();
+      const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+      const totalYes = Object.values(scores).reduce((a,b)=>a+b,0);
+
+      const container = document.getElementById('result-bottlenecks');
+      container.innerHTML = '';
+      for (const [cId, score] of sorted) {
+        const c = cuellosData[parseInt(cId)-1];
+        const row = document.createElement('div');
+        row.className = 'result-row';
+        row.innerHTML = `
+          <div class="result-row-badge" style="background:${c.color}">${c.id}</div>
+          <div class="result-row-info">
+            <div class="result-row-name">${c.name}</div>
+            <div class="result-bar-wrap">
+              <div class="result-bar-fill" style="width:${(score/3)*100}%; background:${c.color}"></div>
+            </div>
+          </div>
+          <div class="result-row-score" style="color:${c.color}">${score}/3</div>
+        `;
+        container.appendChild(row);
+      }
+
+      const mainCuello   = cuellosData[parseInt(sorted[0][0])-1];
+      const secondCuello = scores[sorted[1][0]] >= 2 ? cuellosData[parseInt(sorted[1][0])-1] : null;
+
+      let title, subtitle, verdictTitle, verdictBody, ctaTitle, ctaBody;
+
+      if (totalYes === 0) {
+        title = "Tu ecommerce está en buena forma";
+        subtitle = "No se detectan cuellos críticos activos";
+        verdictTitle = "Sin cuellos activos detectados";
+        verdictBody = "Según tus respuestas, no presentas ninguno de los 4 cuellos de botella principales. Si la facturación está estancada aun así, es posible que el problema esté en una capa más específica: pricing, mix de producto, o saturación de audiencia. Una auditoría puede identificarlo con más precisión.";
+        ctaTitle = "¿Quieres una segunda opinión?";
+        ctaBody = "A veces el cuello está en un detalle que el autodiagnóstico no captura. En la auditoría gratuita lo vemos con los datos reales.";
+      } else if (totalYes <= 3) {
+        title = `Cuello principal: ${mainCuello.name}`;
+        subtitle = `${totalYes} señal${totalYes>1?'es':''} detectada${totalYes>1?'s':''}`;
+        verdictTitle = `El cuello que más te está costando: ${mainCuello.name}`;
+        verdictBody = `${mainCuello.desc} La buena noticia: con ${totalYes} señal${totalYes>1?'es':''} activa${totalYes>1?'s':''} el problema está localizado y es atacable. El siguiente paso concreto es: <span class="verdict-highlight">${mainCuello.fix}</span>`;
+        ctaTitle = `Atacar el cuello de ${mainCuello.name}`;
+        ctaBody = `En la auditoría gratuita diseñamos el plan específico para resolver este cuello en tu cuenta, con tus datos reales.`;
+      } else if (totalYes <= 6) {
+        const names = secondCuello ? `${mainCuello.name} y ${secondCuello.name}` : mainCuello.name;
+        title = `2 cuellos activos: ${names}`;
+        subtitle = `${totalYes} señales detectadas — nivel medio`;
+        verdictTitle = `Dos frentes a trabajar`;
+        verdictBody = `Tienes señales claras en dos cuellos simultáneamente. El orden correcto es siempre atacar primero <span class="verdict-highlight">${mainCuello.name}</span> — es el que más está limitando el resto. Una vez resuelto, el impacto del segundo cuello se reduce naturalmente.`;
+        ctaTitle = "Priorizar el cuello correcto";
+        ctaBody = "Con varios cuellos activos, el orden de ataque importa. En la auditoría definimos la secuencia exacta para tu caso.";
+      } else {
+        title = `${totalYes} señales activas — diagnóstico complejo`;
+        subtitle = "Múltiples cuellos detectados";
+        verdictTitle = "Varios cuellos activos a la vez";
+        verdictBody = `Con ${totalYes} señales activas, tu ecommerce tiene varios frenos operando simultáneamente. Esto no es inusual en la fase €8k–€40k/mes — es el patrón que más vemos. La diferencia entre quedarse en esa fase y escalar suele ser tener un sistema que los ataque en el orden correcto. <span class="verdict-highlight">Sin sistema, arreglar uno sin orden puede hacer que otro empeore.</span>`;
+        ctaTitle = `Un sistema para los ${totalYes} cuellos`;
+        ctaBody = "Con múltiples cuellos activos, la auditoría es especialmente valiosa: ordena los problemas por impacto y define el plan por capas.";
+      }
+
+      document.getElementById('res-title').textContent = title;
+      document.getElementById('res-subtitle').textContent = subtitle;
+      document.getElementById('verdict-title').textContent = verdictTitle;
+      document.getElementById('verdict-body').innerHTML = verdictBody;
+      document.getElementById('cta-title').textContent = ctaTitle;
+      document.getElementById('cta-body').textContent = ctaBody;
+
+      document.getElementById('result-panel').classList.add('visible');
+      document.getElementById('result-panel').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function reiniciar() {
+      Object.keys(answers).forEach(k => delete answers[k]);
+      document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('result-panel').classList.remove('visible');
+      document.getElementById('email-form-wrap').style.display = 'block';
+      document.getElementById('email-success').style.display = 'none';
+      document.getElementById('email-form').reset();
+      updateProgress();
+      updateScores();
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    function submitDiagnostico(e) {
+      e.preventDefault();
+      document.getElementById('email-form-wrap').style.display = 'none';
+      document.getElementById('email-success').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
